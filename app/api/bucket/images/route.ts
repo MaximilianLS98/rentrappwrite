@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSessionClient, createStorageClient } from '@/appwrite/config';
 import { cookies } from 'next/headers';
-import sdk, { ID } from 'node-appwrite';
+import { ID } from 'node-appwrite';
 
 export async function POST(request: NextRequest) {
 	// const { data } = await request.json();
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
 			//     size: imageFile.size,
 			//     timestamp: new Date().toISOString()
 			// });
-            
+
 			if (response && response.$id) {
 				const document = await databaseClient.createDocument(
 					process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || '',
