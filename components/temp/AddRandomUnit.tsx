@@ -5,7 +5,6 @@ import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
-import { get } from 'http';
 
 export default function AddRandomUnit() {
 	const router = useRouter();
@@ -40,7 +39,7 @@ export default function AddRandomUnit() {
 					housingtype: data.data.results[0].gender,
 					description: 'Random Description',
 					squaremeters: Math.floor(Math.random() * 100),
-					rating: Math.floor(Math.random() * 5),
+					rating: Math.floor(Math.random() * 5 + 1),
 				};
 				return parsedObject;
 			};

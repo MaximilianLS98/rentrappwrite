@@ -35,7 +35,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
 	const sessionCookie = cookies().get('session');
 	const { data } = await request.json();
-	data.owner = auth.user.$id;
+	const user = await auth.getUser();
+	const userId = user?.$id;
+	data.owner = userId;
 
 	try {
 		const { databases } = await createSessionClient(sessionCookie?.value);

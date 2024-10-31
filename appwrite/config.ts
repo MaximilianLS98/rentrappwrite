@@ -1,7 +1,7 @@
 import { Client, Databases, Account, Storage } from 'node-appwrite';
 
 const createAdminClient = async () => {
-    console.log(`Creating admin client with endpoint: ${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}, project ID: ${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}, and secret key: ${process.env.APPWRITE_SECRET_KEY}`);
+    console.log(`Creating admin client with endpoint: ${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}, project ID: ${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}`);
     
 	const client = new Client()
 		.setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || '')

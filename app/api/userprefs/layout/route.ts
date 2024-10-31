@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+    // console.log(`POST request to save layout`);
     const user = await auth.getUser();
     if (!user) {
         return NextResponse.redirect(new URL('/login', request.url));
@@ -44,8 +45,8 @@ export async function POST(request: NextRequest) {
         throw new Error('Database ID or collection ID is not defined');
     }
     const { data } = await request.json();
-    console.log(`Trying to save layout for user: ${user.$id} with data:`);
-    console.log(data);
+    // console.log(`Trying to save layout for user: ${user.$id} with data:`);
+    // console.log(data);
     const response = await databases.listDocuments(databaseId, collectionId, [
         Query.equal('$id', user.$id),
     ]);

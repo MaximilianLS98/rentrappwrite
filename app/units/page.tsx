@@ -4,8 +4,7 @@ import AddRandomUnit from '@/components/temp/AddRandomUnit';
 
 export default async function Units() {
     
-	// const units = await axiosInstance.get('/units');
-	// const chat = await axiosInstance.get('/chats');
+	const units = await axiosInstance.get('/units');
 
 	return (
 		<div>
@@ -15,13 +14,13 @@ export default async function Units() {
             </div>
 			<section className='flex-1'>
 				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
-					{/* {units.data.documents.map((unit: any) => {
+					{units.data.documents.map((unit: any) => {
 						return <UnitCard key={unit.$id} unit={unit} />;
-					})} */}
+					})}
 				</div>
 			</section>
             <section className='mx-auto flex flex-wrap justify-center'>
-			    {/* <pre>{JSON.stringify(units.data, null, 2)}</pre> */}
+			    <pre>{JSON.stringify(units.data, null, 2)}</pre>
             </section>
 		</div>
 	);
