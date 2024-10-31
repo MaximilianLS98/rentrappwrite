@@ -27,7 +27,7 @@ export default function RentalUnits(props: RentalUnitsProps) {
 				<ScrollArea className='h-[300px]'>
 					{props.rentalUnits.map((unit) => (
 						<Dialog key={unit.address}>
-							<DialogTrigger asChild>
+							<DialogTrigger className="no-drag" asChild>
 								<Button
 									variant='ghost'
 									className='w-full justify-start rounded-none px-6 py-3 font-normal hover:bg-accent'>

@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 
 export default function KeyMetrics() {
     return (
-		<Card key='key-metrics' className='h-full overflow-auto'>
+		<Card key='key-metrics' className='h-full overflow-clip'>
 			<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 				<CardTitle className='text-md font-medium'>Key Metrics</CardTitle>
 				<BarChart className='h-4 w-4 text-muted-foreground' />
