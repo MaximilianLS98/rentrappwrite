@@ -16,11 +16,12 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         if (!databaseId || !collectionId) {
             throw new Error('Database ID or collection ID is not defined');
         }
+        console.log(`Trying to get unit with id: ${id}, message from route.ts in GET unit by ID`);
         const unit = await databases.getDocument(databaseId, collectionId, id);
         return NextResponse.json(unit);
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+        return NextResponse.json({ error });
     }
 }
 
