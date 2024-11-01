@@ -15,12 +15,12 @@ export default function ProjectedIncome(props: props) {
 	return (
 		<Card key='projected-income' className='h-full overflow-auto'>
 			<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-				<CardTitle className='text-md font-medium'>Projected Income</CardTitle>
+				<CardTitle className='text-md font-medium'>Anslått inntekt</CardTitle>
 				<DollarSign className='h-4 w-4 text-muted-foreground' />
 			</CardHeader>
 			<CardContent className='flex flex-col h-[calc(100%-2rem)]'>
 				<div className='mb-2'>
-					<div className='text-2xl font-bold'>$13,500</div>
+					<div className='text-2xl font-bold'>120,500NOK</div>
 					<p className='text-xs text-muted-foreground'>+8% from last month</p>
 				</div>
 				<div className='flex-grow'>

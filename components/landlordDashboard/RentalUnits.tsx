@@ -20,7 +20,7 @@ export default function RentalUnits(props: RentalUnitsProps) {
     return (
 		<Card key='rental-units' className='h-full overflow-hidden'>
 			<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-				<CardTitle className='text-md font-medium'>Rental Units</CardTitle>
+				<CardTitle className='text-md font-medium'>Enheter</CardTitle>
 				<Home className='h-4 w-4 text-muted-foreground' />
 			</CardHeader>
 			<CardContent className='px-0'>
