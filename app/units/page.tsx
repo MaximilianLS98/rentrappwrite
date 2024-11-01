@@ -22,7 +22,7 @@ export default function Units() {
  useEffect(() => {
     (async () => {
     try {
-        const response = await axiosInstanceClient.get('/units');
+        const response = await axiosInstanceClient.get('api/units');
         setUnits(response.data.documents);
     } catch (error) {
         console.error(error);

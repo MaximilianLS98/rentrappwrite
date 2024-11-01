@@ -18,7 +18,7 @@ import DeleteButton from './unitcard/DeleteButton'
 
 export async function RentalUnitDashboardComponent({ unit }: any) {
 	// const [date, setDate] = useState<Date>();
-   const { data } = await axiosInstanceClient.get('/bucket', {
+   const { data } = await axiosInstanceClient.get('api/bucket', {
 		headers: {
 			cookie: `session=${cookies().get('session')?.value}`,
 		},
