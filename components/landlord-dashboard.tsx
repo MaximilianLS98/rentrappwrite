@@ -141,12 +141,12 @@ export function LandlordDashboardComponent() {
 
 	const updateLayout = async (layout: Layouts, modules: Module[]) => {
     console.log(`Hitting updateLayout in the LandlordDashboardComponent`);
-		await axiosInstanceClient.post('/userprefs/layout', {
+		await axiosInstanceClient.post('api/userprefs/layout', {
 			data: { layout, modules },
 		});
 	};
 	const getLayout = async () => {
-		const response = await axiosInstanceClient.get('/userprefs/layout');
+		const response = await axiosInstanceClient.get('api/userprefs/layout');
 		return response.data;
 	};
 

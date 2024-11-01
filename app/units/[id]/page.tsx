@@ -7,7 +7,7 @@ export default async function Unit(props: any) {
 	const { id } = props.params;
 	// const sessionCookie = cookies().get('session')?.value;
 
-	const { data } = await axiosInstanceClient.get(`/units/${id}`, {
+	const { data } = await axiosInstanceClient.get(`api/units/${id}`, {
 		// headers: {
 			// cookie: `session=${sessionCookie}`,
 		// },
