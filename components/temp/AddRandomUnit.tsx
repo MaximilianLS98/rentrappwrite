@@ -6,7 +6,11 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 
-export default function AddRandomUnit() {
+type props = {
+    setUnits: any;
+}
+
+export default function AddRandomUnit(props: props) {
 	const router = useRouter();
 	const { toast } = useToast();
 
@@ -55,6 +59,7 @@ export default function AddRandomUnit() {
 				},
 				data: randomDataNew,
 			});
+            props.setUnits((prev: any) => [...prev, randomDataNew]);
 			router.refresh();
 			toast({
 				title: 'Unit Added',

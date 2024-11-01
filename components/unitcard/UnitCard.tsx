@@ -4,7 +4,8 @@ import DeleteButton from './DeleteButton';
 import { Search, Sliders, Bed, Bath, Home, DollarSign, Star } from 'lucide-react';
 import Link from 'next/link';
 
-export default function UnitCard({ unit }: any) {
+
+export default function UnitCard({ unit, setUnits }: any) {
 	return (
 		<Card key={unit.id} className='overflow-hidden'>
 			<CardHeader className='p-0'>
@@ -55,7 +56,7 @@ export default function UnitCard({ unit }: any) {
 						View Details
 					</Button>
                     </Link>
-					<DeleteButton id={unit.$id} />
+					<DeleteButton id={unit.$id} setUnits={setUnits} />
 				</div>
 			</CardFooter>
 			{/* <pre>{JSON.stringify(unit, null, 2)}</pre> */}

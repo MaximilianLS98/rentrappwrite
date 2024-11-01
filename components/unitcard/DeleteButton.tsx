@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Trash2 } from 'lucide-react';
 
-export default function DeleteButton(props: { id: string, redirect?: boolean }) {
+export default function DeleteButton(props: { id: string, redirect?: boolean, setUnits?: any }) {
     const router = useRouter();
     const { toast } = useToast();
 
@@ -21,6 +21,7 @@ export default function DeleteButton(props: { id: string, redirect?: boolean }) 
             } else {
                 router.refresh();
             }
+            props.setUnits( (prev: any) => { return prev.filter((unit: any) => unit.$id !== props.id) });
             toast({
                 title: 'Unit Deleted',
                 description: 'Unit was deleted successfully',

@@ -11,7 +11,11 @@ export async function GET(request: NextRequest) {
 	const sessionCookie = cookies().get('session');
 	
 	const user = await auth.getUser();
-	const userId = user?.$id;
+	if (!user) {
+		console.log(`User is not logged in when trying to GET all units, redirecting to login page`);
+		return NextResponse.redirect(new URL('/login', request.url));
+	}
+	const userId = user.$id;
 	
 	try {
 		const { databases } = await createSessionClient(sessionCookie?.value);
@@ -20,10 +24,12 @@ export async function GET(request: NextRequest) {
         if (!databaseId || !collectionId) {
 			throw new Error('Database ID or collection ID is not defined');
 		}
+		console.log(`Trying to get all units for user: ${userId} KEBAB`);
         const units = await databases.listDocuments(databaseId, collectionId, [
 			// Query.equal('owner', await auth.user.$id),
 			Query.equal('owner', userId),
 		]);
+		console.log(`Units found: ${units}`);
         return NextResponse.json(units);
 	} catch (error) {
         console.error(error);
