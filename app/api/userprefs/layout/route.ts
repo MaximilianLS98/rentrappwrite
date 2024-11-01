@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // Both layout and modules are stored as JSON strings in the database and need to be parsed before returning
     const layout = JSON.parse(response.layout);
     const modules = JSON.parse(response.modules);
-    console.log(`User layout found: ${layout} and modules: ${modules}`);
+    // console.log(`User layout found: ${layout} and modules: ${modules}`);
     if (response.$id) {
         return NextResponse.json({ layout, modules });
     } else {
