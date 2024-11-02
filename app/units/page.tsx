@@ -1,9 +1,10 @@
 'use client';
 import { useState, useEffect } from 'react';
-// import { axiosInstance } from '@/utils/axios';
+import { axiosInstance } from '@/utils/axios';
 import { axiosInstanceClient } from '@/utils/clientAxios';
 import UnitCard from '@/components/unitcard/UnitCard';
 import AddRandomUnit from '@/components/temp/AddRandomUnit';
+// import { cookies } from 'next/headers';
 
 interface Unit {
     title: string;
@@ -16,7 +17,11 @@ interface Unit {
     rating: number;
 }
 
+// TODO - Might want to make this into a server component instead, but have to then tweak both delete and add random unit components
+
+// export default async function Units() {
 export default function Units() {
+//     const sessionCookie = cookies().get('session')?.value;
     const [units, setUnits] = useState<Unit[] | null>(null);
 
  useEffect(() => {
@@ -33,6 +38,12 @@ export default function Units() {
     }
     )();
     }, []);
+
+    // const units = await axiosInstanceClient.get('api/units', {
+    //     headers: {
+    //         cookie: `session=${sessionCookie}`,
+    //     },
+    // })
 
 	return (
 		<div>

@@ -3,15 +3,24 @@ import { createSessionClient, createStorageClient } from '@/appwrite/config';
 import { cookies } from 'next/headers';
 
 export async function GET(request: NextRequest) {
-	const sessionCookie = cookies().get('session');
+	// const sessionCookie = cookies().get('session')?.value;
+	const cookieStore = cookies();
+	// console.log(`Cookie store: ${cookieStore}`);
+	const sessionCookie = cookieStore.get('session')?.value;
+	if (!sessionCookie) {
+		return NextResponse.json({ error: 'No session cookie found' });
+	}
 	try {
-		const { storage } = await createStorageClient(sessionCookie?.value);
+		const { storage } = await createSessionClient(sessionCookie);
 		// const files = await storage.listFiles('67177f8a0031cf23e06a');
-		const files = await storage.listFiles(process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID_IMAGES || '671aaa230027397d8ec6');
+		const files = await storage.listFiles(
+			process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID_IMAGES || '671aaa230027397d8ec6',
+		);
+		console.log(`Files in GET all documents: ${files}`);
 		return NextResponse.json(files);
 	} catch (error) {
-		console.error(error);
-		return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+		console.error(`There was an error in GET api/bucket/route.ts: ${error}`);
+		return NextResponse.json({ error });
 	}
 }
 

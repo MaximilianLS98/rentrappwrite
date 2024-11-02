@@ -44,9 +44,10 @@ export default function UploadFile() {
         
 
 		try {
-			const response = await axiosInstanceClient.post('/bucket/images', formData, {
+			const response = await axiosInstanceClient.post('api/bucket/images', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
+                    'cache-control': 'no-cache',
 				},
 			});
             console.log('Image uploaded:', JSON.stringify(response.data));

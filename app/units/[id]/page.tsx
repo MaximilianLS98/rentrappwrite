@@ -1,16 +1,16 @@
 import { axiosInstanceClient } from '@/utils/clientAxios';
-// import { cookies } from 'next/headers';
+import { cookies } from 'next/headers';
 import UnitCard from '@/components/unitcard/UnitCard';
 import { RentalUnitDashboardComponent } from '@/components/rental-unit-dashboard';
 
 export default async function Unit(props: any) {
 	const { id } = props.params;
-	// const sessionCookie = cookies().get('session')?.value;
+	const sessionCookie = cookies().get('session')?.value;
 
 	const { data } = await axiosInstanceClient.get(`api/units/${id}`, {
-		// headers: {
-			// cookie: `session=${sessionCookie}`,
-		// },
+		headers: {
+			cookie: `session=${sessionCookie}`,
+		},
 	});
 
 	// const altData = async () => {

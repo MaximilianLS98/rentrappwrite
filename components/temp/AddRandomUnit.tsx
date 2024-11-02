@@ -10,6 +10,18 @@ type props = {
     setUnits: any;
 }
 
+interface TrandomData {
+    $id?: string;
+    title: string;
+    address: string;
+    monthlyrent: number;
+    deposit: number;
+    housingtype: string;
+    description: string;
+    squaremeters: number;
+    rating: number;
+}
+
 export default function AddRandomUnit(props: props) {
 	const router = useRouter();
 	const { toast } = useToast();
@@ -35,7 +47,7 @@ export default function AddRandomUnit(props: props) {
 					},
 				});
 				// console.log(`Random data: ${JSON.stringify(data, null, 2)}`);
-				const parsedObject = {
+				const parsedObject: TrandomData = {
 					title: data.data.results[0].location.city,
 					address: data.data.results[0].location.street.name,
 					monthlyrent: Math.floor(Math.random() * 1000),
@@ -52,13 +64,15 @@ export default function AddRandomUnit(props: props) {
 				return data;
 			});
 
-			await axiosInstanceClient.post('/units', {
+			const response = await axiosInstanceClient.post('api/units', {
 				headers: {
 					'Content-Type': 'application/json',
 					cookie: `session=${session}`,
 				},
 				data: randomDataNew,
 			});
+            const realId = response.data.$id;
+            randomDataNew.$id = realId;
             props.setUnits((prev: any) => [...prev, randomDataNew]);
 			router.refresh();
 			toast({
