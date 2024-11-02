@@ -14,6 +14,9 @@ const createAdminClient = async () => {
         },
         get databases() {
             return new Databases(client);
+        },
+        get storage() {
+            return new Storage(client);
         }
     }
 };
@@ -33,10 +36,15 @@ const createSessionClient = async (session: any) => {
         },
         get databases() {
             return new Databases(client);
+        },
+        get storage() {
+            return new Storage(client);
         }
     }
 };
 
+
+// Shouldnt need this anymore, as we added get storage() to createSessionClient and createAdminClient
 const createStorageClient = async (session: any) => {
     const client = new Client()
         .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || '')
