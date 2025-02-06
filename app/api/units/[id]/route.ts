@@ -6,8 +6,9 @@ import { revalidatePath } from 'next/cache';
 
 // * Tested and working route GET UNIT BY ID
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-    const { id } = params;
-    const sessionCookie = cookies().get('session');
+    const id = (await params).id;
+    const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session');
     // console.log(`Trying to get unit with id: ${id}, message from route.ts`);
     try {
         const { databases } = await createSessionClient(sessionCookie?.value);
@@ -28,8 +29,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 // ! - Untested route
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-    const sessionCookie = cookies().get('session');
-    const { id } = params;
+    const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session');
+    const id = (await params).id;
     const { data } = await request.json();
     console.log(`Trying to update unit with id: ${id}, message from route.ts`);
     try {
@@ -50,10 +52,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
 // * Tested and working route DELETE UNIT BY ID
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-	const { id } = params;
+	const id = (await params).id;
     console.log(`Trying to delete unit with id: ${id}, message from route.ts`);
     
-	const sessionCookie = cookies().get('session');
+	const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session');
     console.log(`Session cookie: ${sessionCookie} in delete`);
 	const { databases } = await createSessionClient(sessionCookie?.value);
 	const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;

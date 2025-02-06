@@ -15,7 +15,8 @@ import DeleteButton from './unitcard/DeleteButton'
 import { cookies } from "next/headers"
 
 export async function RentalUnitDashboardComponent({ unit }: any) {
-  const sessionCookie = cookies().get('session')?.value;
+	const allCookies = await cookies();
+  const sessionCookie = allCookies.get('session')?.value;
    const { data } = await axiosInstanceClient.get('api/bucket',
     {
       headers: {
@@ -27,7 +28,6 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 	return (
 		<div className='container mx-auto p-4'>
 			<h1 className='text-3xl font-bold mb-6'>{unit.title}</h1>
-      <pre>{JSON.stringify(unit, null, 2)}</pre>
 
 			<div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'>
 				<Card>
@@ -80,7 +80,7 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 					</CardHeader>
 					<CardContent>
 						<div className='space-y-2'>
-							<Button className='w-full' variant='outline'>
+							<Button className='w-full rounded' variant='outline'>
 								<Edit className='mr-2 h-4 w-4' /> Edit Unit
 							</Button>
 							{/* <Popover>
@@ -99,8 +99,8 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 									/>
 								</PopoverContent>
 							</Popover> */}
-              <DeleteButton id={unit.$id} redirect={true} />
-								{/* <Button className='w-full' variant='destructive'>
+							<DeleteButton id={unit.$id} redirect={true} />
+							{/* <Button className='w-full' variant='destructive'>
 									<Trash2 className='mr-2 h-4 w-4' /> Delete Unit
 								</Button> */}
 						</div>
@@ -121,7 +121,7 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 						<CardContent>
 							<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
 								{data.files.map((file: any) => (
-										<AppwriteImage fileId={file.$id} width={300} height={200} />
+									<AppwriteImage fileId={file.$id} width={300} height={200} />
 								))}
 							</div>
 							<UploadMultipleFiles />
@@ -158,6 +158,7 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 					</Card>
 				</TabsContent>
 			</Tabs>
+			<pre>{JSON.stringify(unit, null, 2)}</pre>
 		</div>
 	);
 }

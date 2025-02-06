@@ -5,7 +5,8 @@ import { ImageFormat } from 'node-appwrite';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
 	const { id } = params;
-	const sessionCookie = cookies().get('session');
+	const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session');
 
 	const { searchParams } = new URL(request.url);
 	const width = searchParams.get('width');

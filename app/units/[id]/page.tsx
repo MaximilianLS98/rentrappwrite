@@ -4,8 +4,9 @@ import UnitCard from '@/components/unitcard/UnitCard';
 import { RentalUnitDashboardComponent } from '@/components/rental-unit-dashboard';
 
 export default async function Unit(props: any) {
-	const { id } = props.params;
-	const sessionCookie = cookies().get('session')?.value;
+	const id = await (props.params).id;
+	const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session')?.value;
 
 	const { data } = await axiosInstanceClient.get(`api/units/${id}`, {
 		headers: {
@@ -13,15 +14,13 @@ export default async function Unit(props: any) {
 		},
 	});
 
-	// const altData = async () => {
-	// 	try {
-	// 		const response = await fetch(`/api/units/${id}`);
-	// 		const data = await response.json();
-	// 		return data;
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// };
+    if(data.code === 404) {
+        throw new Error('Unit not found');
+    }
+
+    if(data.error) {
+        throw new Error(data.error);
+    }
 
 	return (
 		<main>

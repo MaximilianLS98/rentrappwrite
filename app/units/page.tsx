@@ -46,7 +46,7 @@ export default function Units() {
     // })
 
 	return (
-		<div>
+		<div className='container mx-auto p-4'> 
 			<h1>Units</h1>
             <div className='fixed bottom-10 left-10 m-2'>
 			    <AddRandomUnit setUnits={setUnits} />

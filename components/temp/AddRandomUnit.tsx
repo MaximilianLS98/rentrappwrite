@@ -20,6 +20,8 @@ interface TrandomData {
     description: string;
     squaremeters: number;
     rating: number;
+	tenant: string;
+	status: string;
 }
 
 export default function AddRandomUnit(props: props) {
@@ -37,6 +39,15 @@ export default function AddRandomUnit(props: props) {
 		rating: 4.8,
 	};
 
+	const getVacantOrOccupied = () => {
+		const random = Math.floor(Math.random() * 2);
+		if (random === 0) {
+			return 'Vacant';
+		} else {
+			return 'Occupied';
+		}
+	}
+
 	const session = getCookie('session');
 	const handleClick = async () => {
 		try {
@@ -46,7 +57,6 @@ export default function AddRandomUnit(props: props) {
 						results: 1,
 					},
 				});
-				// console.log(`Random data: ${JSON.stringify(data, null, 2)}`);
 				const parsedObject: TrandomData = {
 					title: data.data.results[0].location.city,
 					address: data.data.results[0].location.street.name,
@@ -56,6 +66,8 @@ export default function AddRandomUnit(props: props) {
 					description: 'Random Description',
 					squaremeters: Math.floor(Math.random() * 100),
 					rating: Math.floor(Math.random() * 5 + 1),
+					tenant: data.data.results[0].name.first,
+					status: getVacantOrOccupied(),
 				};
 				return parsedObject;
 			};
@@ -64,16 +76,21 @@ export default function AddRandomUnit(props: props) {
 				return data;
 			});
 
-			const response = await axiosInstanceClient.post('api/units', {
+			const formData = new FormData();
+			for (const key in randomDataNew) {
+				if (randomDataNew.hasOwnProperty(key)) {
+					formData.append(key, randomDataNew[key as keyof TrandomData] as any);
+				}
+			}
+
+			const response = await axiosInstanceClient.post('api/units', formData, {
 				headers: {
-					'Content-Type': 'application/json',
-					cookie: `session=${session}`,
+					'Content-Type': 'multipart/form-data',
 				},
-				data: randomDataNew,
 			});
-            const realId = response.data.$id;
-            randomDataNew.$id = realId;
-            props.setUnits((prev: any) => [...prev, randomDataNew]);
+			const realId = response.data.$id;
+			randomDataNew.$id = realId;
+			props.setUnits((prev: any) => [...prev, randomDataNew]);
 			router.refresh();
 			toast({
 				title: 'Unit Added',
@@ -89,5 +106,5 @@ export default function AddRandomUnit(props: props) {
 		}
 	};
 
-	return <Button onClick={() => handleClick()}>Add Random Unit</Button>;
+	return <Button className='rounded' onClick={() => handleClick()}>Add Random Unit</Button>;
 }

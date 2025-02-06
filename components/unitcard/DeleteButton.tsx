@@ -14,14 +14,17 @@ export default function DeleteButton(props: { id: string, redirect?: boolean, se
 		console.log(`Deleting unit with id: ${props.id}`);
 
         try {
-            await axiosInstanceClient.delete(`/units/${props.id}`);
+            const response = await axiosInstanceClient.delete(`api/units/${props.id}`);
+            console.log(`Response from delete request: ${JSON.stringify(response)}`);
             if (props.redirect) {
                 router.push('/units');
                 router.refresh();
             } else {
                 router.refresh();
             }
-            props.setUnits( (prev: any) => { return prev.filter((unit: any) => unit.$id !== props.id) });
+            if (props.setUnits) {
+                props.setUnits( (prev: any) => { return prev.filter((unit: any) => unit.$id !== props.id) });
+            }
             toast({
                 title: 'Unit Deleted',
                 description: 'Unit was deleted successfully',
@@ -39,7 +42,7 @@ export default function DeleteButton(props: { id: string, redirect?: boolean, se
 	return (
 		<>
 			{/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
-			<Button onClick={(e) => handleDelete(e)} variant={'destructive'} size='sm'>
+			<Button className='w-full rounded' onClick={(e) => handleDelete(e)} variant={'destructive'}>
                 <Trash2 size={16} className='mr-1' />
 				Delete
 			</Button>

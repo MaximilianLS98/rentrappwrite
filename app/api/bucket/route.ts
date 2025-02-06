@@ -3,10 +3,8 @@ import { createSessionClient, createStorageClient } from '@/appwrite/config';
 import { cookies } from 'next/headers';
 
 export async function GET(request: NextRequest) {
-	// const sessionCookie = cookies().get('session')?.value;
-	const cookieStore = cookies();
-	// console.log(`Cookie store: ${cookieStore}`);
-	const sessionCookie = cookieStore.get('session')?.value;
+	const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session');
 	if (!sessionCookie) {
 		return NextResponse.json({ error: 'No session cookie found' });
 	}

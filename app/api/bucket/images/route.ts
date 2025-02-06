@@ -5,7 +5,8 @@ import { ID } from 'node-appwrite';
 
 export async function POST(request: NextRequest) {
 	// const { data } = await request.json();
-	const sessionCookie = cookies().get('session');
+	const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session');
     console.log(`Session cookie in POST image route: ${sessionCookie}`);
 	const { storage: storageClient } = await createStorageClient(sessionCookie?.value);
 	const { databases: databaseClient } = await createSessionClient(sessionCookie?.value);

@@ -12,9 +12,8 @@ import LogoutButton from '@/components/header/LogoutButton';
 // import { getUserAuth } from '@/lib/auth/utils';
 
 export default async function Menu() {
-	// const userAuth = await getUserAuth();
 	const user = await auth.getUser();
-	console.log('User:', user);
+	// console.log('User:', user);
 	
 
 	const UserSection = user ? (

@@ -22,7 +22,7 @@ export default function UnitCard({ unit, setUnits }: any) {
 					className='w-full h-48 object-cover'
 				/>
 			</CardHeader>
-			<CardContent className='p-4 bg-muted'>
+			<CardContent className='p-4 bg-card'>
 				<CardTitle className='text-lg mb-2'>
 					{unit.title} - {unit.squaremeters}m<sup>2</sup>
 				</CardTitle>
@@ -45,14 +45,14 @@ export default function UnitCard({ unit, setUnits }: any) {
 					</div>
 				</div>
 			</CardContent>
-			<CardFooter className='bg-secondary px-4 py-2 flex justify-between items-center'>
+			<CardFooter className='bg-card px-4 py-2 flex justify-between items-center'>
 				<div className='flex items-center'>
 					<Star className='text-yellow-400 mr-1' size={16} />
 					<span className='text-sm font-semibold'>{unit.rating}</span>
 				</div>
 				<div className='flex gap-2'>
                     <Link href={`/units/${unit.$id}`}>
-					<Button variant={'default'} size='sm'>
+					<Button className='rounded' variant={'default'} size='sm'>
 						View Details
 					</Button>
                     </Link>
