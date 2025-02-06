@@ -4,8 +4,15 @@ import { cookies } from "next/headers";
 import { ID } from "node-appwrite";
 import { revalidatePath } from 'next/cache';
 
+type Props = {
+    params: Promise<{
+        id: string;
+    }>;
+};
+
 // * Tested and working route GET UNIT BY ID
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, props: Props) {
+    const params = await props.params;
     const id = (await params).id;
     const allCookies = await cookies();
 	const sessionCookie = allCookies.get('session');
@@ -28,7 +35,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 
 // ! - Untested route
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, props: Props) {
+    const params = await props.params;
     const allCookies = await cookies();
 	const sessionCookie = allCookies.get('session');
     const id = (await params).id;
@@ -51,7 +59,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // * Tested and working route DELETE UNIT BY ID
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, props: Props) {
+    const params = await props.params;
 	const id = (await params).id;
     console.log(`Trying to delete unit with id: ${id}, message from route.ts`);
     
