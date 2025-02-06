@@ -3,7 +3,7 @@ import axios from 'axios';
 const internalEndpoint =
 	process.env.NODE_ENV === 'development'
 		? 'http://localhost:3000/'
-		: process.env.INTERNAL_API_ENDPOINT;
+		: 'http://localhost:3000/' // process.env.INTERNAL_API_ENDPOINT;
 
 console.log(`internalEndpoint: ${internalEndpoint}`);
 
