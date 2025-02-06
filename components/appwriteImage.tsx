@@ -27,10 +27,11 @@ export default async function AppwriteImage({
 	})}`;
 
 	try {
+		const sessionCookie = (await cookies()).get('session')?.value;
 		const response = await axios.get(imageUrl, {
 			responseType: 'arraybuffer', //'blob',
 			headers: {
-				cookie: `session=${cookies().get('session')?.value}`,
+				cookie: `session=${sessionCookie}`,
 			},
 		});
 		/*

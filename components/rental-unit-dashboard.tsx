@@ -1,5 +1,3 @@
-// 'use client'
-import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -12,17 +10,20 @@ import imagePlaceholder from '@/public/placeholder.png'
 import UploadFile from './UploadFile'
 import UploadMultipleFiles from './UploadMultipleFiles'
 import { axiosInstanceClient } from "@/utils/clientAxios"
-import { cookies } from "next/headers"
 import AppwriteImage from './appwriteImage'
 import DeleteButton from './unitcard/DeleteButton'
+import { cookies } from "next/headers"
 
 export async function RentalUnitDashboardComponent({ unit }: any) {
-	// const [date, setDate] = useState<Date>();
-   const { data } = await axiosInstanceClient.get('api/bucket', {
-		headers: {
-			cookie: `session=${cookies().get('session')?.value}`,
-		},
-   });
+	const allCookies = await cookies();
+  const sessionCookie = allCookies.get('session')?.value;
+   const { data } = await axiosInstanceClient.get('api/bucket',
+    {
+      headers: {
+        cookie: `session=${sessionCookie}`,
+      },
+    }
+   );
 
 	return (
 		<div className='container mx-auto p-4'>
@@ -79,7 +80,7 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 					</CardHeader>
 					<CardContent>
 						<div className='space-y-2'>
-							<Button className='w-full' variant='outline'>
+							<Button className='w-full rounded' variant='outline'>
 								<Edit className='mr-2 h-4 w-4' /> Edit Unit
 							</Button>
 							{/* <Popover>
@@ -98,8 +99,8 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 									/>
 								</PopoverContent>
 							</Popover> */}
-              <DeleteButton id={unit.$id} redirect={true} />
-								{/* <Button className='w-full' variant='destructive'>
+							<DeleteButton id={unit.$id} redirect={true} />
+							{/* <Button className='w-full' variant='destructive'>
 									<Trash2 className='mr-2 h-4 w-4' /> Delete Unit
 								</Button> */}
 						</div>
@@ -120,25 +121,8 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 						<CardContent>
 							<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
 								{data.files.map((file: any) => (
-									// <div
-										// key={file.$id}
-										// className='relative aspect-video bg-muted rounded-lg overflow-hidden'>
-										<AppwriteImage fileId={file.$id} width={300} height={200} />
-									// </div>
+									<AppwriteImage fileId={file.$id} width={300} height={200} />
 								))}
-								{/* {[1, 2, 3, 4, 5, 6].map((index) => (
-									<div
-										key={index}
-										className='relative aspect-video bg-muted rounded-lg overflow-hidden'>
-										<Image
-											src={imagePlaceholder}
-											alt={`Unit image ${index}`}
-											className='object-cover w-full h-full'
-                      width={300}
-                      height={200}
-										/>
-									</div>
-								))} */}
 							</div>
 							<UploadMultipleFiles />
 						</CardContent>
@@ -174,6 +158,7 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 					</Card>
 				</TabsContent>
 			</Tabs>
+			<pre>{JSON.stringify(unit, null, 2)}</pre>
 		</div>
 	);
 }

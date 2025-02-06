@@ -18,7 +18,8 @@ const auth: Auth = {
 	sessionCookie: null,
 
 	getUser: async () => {
-		auth.sessionCookie = cookies().get('session')?.value as any;
+		const cookieObj = await cookies();
+		auth.sessionCookie = cookieObj.get('session')?.value as any;
 		// console.log(`Session cookie: ${auth.sessionCookie} in getUser auth utils`);
 		
 		if (auth.sessionCookie) {
@@ -39,6 +40,7 @@ const auth: Auth = {
 	},
 	createSession: async (formData: any) => {
 		'use server';
+		const cookieObj = await cookies();
 		const data = Object.fromEntries(formData);
 		const { email, password } = data;
 
@@ -47,7 +49,7 @@ const auth: Auth = {
 
 		console.log(`Session created: ${session.secret}`);
 
-		cookies().set('session', session.secret, {
+		cookieObj.set('session', session.secret, {
 			httpOnly: true,
 			secure: true,
 			sameSite: 'strict',
@@ -59,20 +61,22 @@ const auth: Auth = {
 	},
 	logOut: async () => {
 		'use server';
-		auth.sessionCookie = cookies().get('session')?.value as any;
+		const cookieObj = await cookies();
+		auth.sessionCookie = cookieObj.get('session')?.value as any;
 		try {
 			const { account } = await createSessionClient(auth.sessionCookie);
 			await account.deleteSession('current');
 		} catch (error) {
 			console.log(error);
 		}
-		cookies().delete('session');
+		cookieObj.delete('session');
 		auth.user = null;
 		auth.sessionCookie = null;
 		redirect('/');
 	},
 	signUp: async (formData: any) => {
 		'use server';
+		const cookieObj = await cookies();
 		const data = Object.fromEntries(formData);
 		const { email, password } = data;
 		console.log(`Trying to sign up with email: ${email}, password: ${password}`);
@@ -84,12 +88,13 @@ const auth: Auth = {
 		// ? Should we log in the user after sign up automatically? Or should we redirect to login page? Maybe depends on confirmation email?
 		if (user.$id) {
 			const session = await account.createEmailPasswordSession(email, password);
-			cookies().set('session', session.secret, {
+			cookieObj.set('session', session.secret, {
 				httpOnly: true,
 				secure: true,
 				sameSite: 'strict',
 				expires: new Date(session.expire),
 				path: '/',
+				domain: process.env.NODE_ENV === 'development' ? 'localhost' : '.kaktusfamilien.com',	
 			});
 			redirect('/');
 		} else {

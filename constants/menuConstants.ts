@@ -19,6 +19,11 @@ export const menuConstants = [
 		id: 'utleier',
 		href: '/dashboard',
 	},
+	{
+		name: 'Chat',
+		id: 'chat',
+		href: '/chat',
+	},
 ];
 
 interface MenuElement {
