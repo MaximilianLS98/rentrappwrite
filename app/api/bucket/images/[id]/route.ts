@@ -3,7 +3,14 @@ import { cookies } from 'next/headers';
 import { createSessionClient, createStorageClient } from '@/appwrite/config';
 import { ImageFormat } from 'node-appwrite';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+type Props = {
+	params: Promise<{
+		id: string;
+	}>;
+};
+
+export async function GET(request: NextRequest, props: Props) {
+	const params = await props.params;
 	const { id } = params;
 	const allCookies = await cookies();
 	const sessionCookie = allCookies.get('session');
@@ -56,14 +63,16 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 	}
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, props: Props) {
+	const params = await props.params;
 	const { id } = params;
 	return NextResponse.json({
 		message: `Trying to update a single thing from bucket storage by ${id}!`,
 	});
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, props: Props) {
+	const params = await props.params;
 	const { id } = params;
     // TODO Remeber to delete the metadata from the database as well
 	return NextResponse.json({
