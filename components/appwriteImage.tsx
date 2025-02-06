@@ -30,7 +30,7 @@ export default async function AppwriteImage({
 		const response = await axios.get(imageUrl, {
 			responseType: 'arraybuffer', //'blob',
 			headers: {
-				cookie: `session=${cookies().get('session')?.value}`,
+				cookie: `session=${(await cookies()).get('session')?.value}`,
 			},
 		});
 		/*
