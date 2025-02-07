@@ -14,17 +14,12 @@ export default async function Page() {
 	// 	},
 	// });
 
-	// const { data } = await axiosInstanceClient.get('/api/units', {
-	// 	headers: {
-	// 		cookie: `session=${allCookies.get('session')?.value}`,
-	// 	},
-	// });
-
-	const data = await fetch('https://dashboard.kaktusfamilien.com/api/units', {
+	const { data } = await axiosInstanceClient.get('/api/units', {
 		headers: {
 			cookie: `session=${allCookies.get('session')?.value}`,
 		},
-	}).then((res) => res.json());
+	});
+
 
 	const rentalUnits = data.documents;
 
