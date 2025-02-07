@@ -25,7 +25,7 @@ export default async function Header() {
       <div className="flex items-center">
         <Link href="/">
           <h1 className="hidden text-3xl text-freelancemain-accentforeground hover:text-freelancemain-foreground lg:block">
-            RentR
+            Rent<span className='text-teal-500'>R</span>
           </h1>
         </Link>
         <Link href="/">
