@@ -14,16 +14,24 @@ export default async function Page() {
 	// 	},
 	// });
 
-	const { data } = await axiosInstanceClient.get('/api/units', {
+	// const { data } = await axiosInstanceClient.get('/api/units', {
+	// 	headers: {
+	// 		cookie: `session=${allCookies.get('session')?.value}`,
+	// 	},
+	// });
+
+	const data = await fetch('https://dashboard.kaktusfamilien.com/api/units', {
 		headers: {
 			cookie: `session=${allCookies.get('session')?.value}`,
 		},
-	});
+	}).then((res) => res.json());
+
 	const rentalUnits = data.documents;
 
 	return (
 		<div className='p-2 md:p-4'>
 			<LandlordDashboardComponent rentalUnits={rentalUnits} user={user}  />
+
 			{/* <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mx-auto'> */}
 			{/* <div className='flex gap-4 flex-wrap'>
 				{data.files.map((file: any) => {
