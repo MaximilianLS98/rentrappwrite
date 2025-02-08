@@ -23,7 +23,9 @@ export default async function AppwriteImage({
 	// ! I DONT THINK THIS PART WORKS IN PRODUCTION, BECAUSE ITS HARDCODED TO LOCALHOST
 	//! const src = `http://localhost:3000/api/storage/${fileId}`;
 	// const source = await axiosInstanceClient.get(`/storage/${fileId}`);
-	const imageUrl = `http://localhost:3000/api/bucket/images/${fileId}?${new URLSearchParams({
+	// check the environment, if its production, use the production url, else use the localhost url
+	const baseURL = process.env.NODE_ENV === 'production' ? process.env.INTERNAL_API_ENDPOINT : `http://localhost:3000/`;
+	const imageUrl = `${baseURL}api/bucket/images/${fileId}?${new URLSearchParams({
 		...(width && { width: width.toString() }),
 		...(height && { height: height.toString() }),
 		...(output && { output }),

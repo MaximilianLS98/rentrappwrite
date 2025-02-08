@@ -5,10 +5,11 @@ import AppwriteImage from "@/components/appwriteImage"
 
 export default async function() { 
     const allCookies = await cookies();
+    const sessionCookie = allCookies.get('session')?.value;
 
     const { data } = await axiosInstanceClient.get('/api/bucket/images', {
         headers: {
-			cookie: `session=${allCookies.get('session')?.value}`,
+			cookie: `session=${sessionCookie}`,
 		},
     });    
 
