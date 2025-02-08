@@ -1,8 +1,10 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import DeleteButton from './DeleteButton';
-import { Search, Sliders, Bed, Bath, Home, DollarSign, Star } from 'lucide-react';
+import { Search, Sliders, Bed, Bath, Home, DollarSign, Star, ListCollapse } from 'lucide-react';
 import Link from 'next/link';
+import PlaceholderImage from '@/public/placeholder.png';
+import Image from 'next/image';
 
 
 export default function UnitCard({ unit, setUnits }: any) {
@@ -16,8 +18,9 @@ export default function UnitCard({ unit, setUnits }: any) {
                     alt={unit.title}
                     className='w-full h-48 object-cover'
                 /> */}
-				<img
-					src={`https://picsum.photos/200`}
+				<Image
+					// src={`https://picsum.photos/200`}
+					src={PlaceholderImage}
 					alt={unit.title}
 					className='w-full h-48 object-cover'
 				/>
@@ -28,16 +31,16 @@ export default function UnitCard({ unit, setUnits }: any) {
 				</CardTitle>
 				<div className='flex items-center text-sm text-muted-foreground mb-2'>
 					<DollarSign size={16} className='mr-1' />
-					<span className='font-semibold'>${unit.monthlyrent}</span> / month
+					<span className='font-semibold'>NOK{unit.monthlyrent}</span> / måneden
 				</div>
 				<div className='flex items-center justify-between text-sm text-muted-foreground text-gray-500'>
 					<div className='flex items-center'>
 						<Bed size={16} className='mr-1' />
-						<span>{unit.bedrooms} bed</span>
+						<span>{unit.bedrooms} soverom</span>
 					</div>
 					<div className='flex items-center'>
 						<Bath size={16} className='mr-1' />
-						<span>{unit.bathrooms} bath</span>
+						<span>{unit.bathrooms} bad</span>
 					</div>
 					<div className='flex items-center'>
 						<Home size={16} className='mr-1' />
@@ -51,9 +54,10 @@ export default function UnitCard({ unit, setUnits }: any) {
 					<span className='text-sm font-semibold'>{unit.rating}</span>
 				</div>
 				<div className='flex gap-2'>
-                    <Link href={`/units/${unit.$id}`}>
-					<Button className='rounded' variant={'default'} size='sm'>
-						View Details
+                    <Link href={`/units/${unit.$id}`} className='min-h-full'>
+					<Button className='rounded w-full' variant={'default'}>
+						<ListCollapse size={16} className='mr-1' />
+						Se detaljer
 					</Button>
                     </Link>
 					<DeleteButton id={unit.$id} setUnits={setUnits} />
