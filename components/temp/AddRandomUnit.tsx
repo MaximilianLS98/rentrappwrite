@@ -22,6 +22,8 @@ interface TrandomData {
     rating: number;
 	tenant: string;
 	status: string;
+	bedrooms?: number;
+	bathrooms?: number;
 }
 
 export default function AddRandomUnit(props: props) {
@@ -62,12 +64,14 @@ export default function AddRandomUnit(props: props) {
 					address: data.data.results[0].location.street.name,
 					monthlyrent: Math.floor(Math.random() * 1000),
 					deposit: Math.floor(Math.random() * 1000),
-					housingtype: data.data.results[0].gender,
+					housingtype: data.data.results[0].gender === 'female' ? 'apartment' : 'house',
 					description: 'Random Description',
 					squaremeters: Math.floor(Math.random() * 100),
 					rating: Math.floor(Math.random() * 5 + 1),
 					tenant: data.data.results[0].name.first,
 					status: getVacantOrOccupied(),
+					bathrooms: Math.floor(Math.random() * 5),
+					bedrooms: Math.floor(Math.random() * 5),
 				};
 				return parsedObject;
 			};
