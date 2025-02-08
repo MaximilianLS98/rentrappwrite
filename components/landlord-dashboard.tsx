@@ -204,9 +204,7 @@ export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?
 		const componentContent = (() => {
 			switch (id) {
 				case 'rental-units':
-					return (
-						<RentalUnits key='rental-units' rentalUnits={rentalUnits} />
-					);
+					return <RentalUnits key='rental-units' rentalUnits={rentalUnits} />
 				case 'projected-income':
 					return <ProjectedIncome key='projected-income' incomeData={incomeData} />;
 				case 'important-dates':
@@ -332,7 +330,7 @@ export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?
 					</SheetTrigger>
 					<SheetContent>
 						<SheetHeader>
-							<SheetTitle>Dashboard Settings</SheetTitle>
+							<SheetTitle>Dashboard innstillinger</SheetTitle>
 							<SheetDescription>
 								Toggle modules on or off to customize your dashboard.
 							</SheetDescription>
