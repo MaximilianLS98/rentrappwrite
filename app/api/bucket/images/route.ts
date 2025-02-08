@@ -3,6 +3,26 @@ import { createSessionClient, createStorageClient } from '@/appwrite/config';
 import { cookies } from 'next/headers';
 import { ID } from 'node-appwrite';
 
+export async function GET(request: NextRequest) {
+	const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session');
+	console.log(`Session cookie in GET image route: ${sessionCookie}`);
+	if (!sessionCookie) {
+		return NextResponse.json({ error: 'No session cookie found' });
+	}
+	try {
+		const { storage } = await createStorageClient(sessionCookie?.value);
+		const files = await storage.listFiles(
+			process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID_IMAGES || '671aaa230027397d8ec6',
+		);
+		console.log(`Files in GET all documents: ${JSON.stringify(files)}`);
+		return NextResponse.json(files);
+	} catch (error) {
+		console.error(`There was an error in GET api/bucket/route.ts: ${error}`);
+		return NextResponse.json({ error });
+	}
+}
+
 export async function POST(request: NextRequest) {
 	// const { data } = await request.json();
 	const allCookies = await cookies();
@@ -75,6 +95,7 @@ export async function POST(request: NextRequest) {
 						name: imageFile.name,
 						type: imageFile.type,
 						size: imageFile.size,
+						units: fileId,
 					},
 				);
 				console.log(`Document created: ${JSON.stringify(document)}`);

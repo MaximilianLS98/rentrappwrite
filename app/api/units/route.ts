@@ -88,3 +88,50 @@ export async function POST(request: NextRequest) {
 		return NextResponse.json({ error: 'Access denied' }, { status: 403 });
 	}
 }
+
+export async function PUT(request: NextRequest) {
+	const contentType = request.headers.get('content-type');
+	if (contentType?.includes('application/json')) {
+		return NextResponse.json({ error: 'Please use multipart/form-data, we dont support JSON' }, { status: 400 });
+	}
+
+	const allCookies = await cookies();
+	const sessionCookie = allCookies.get('session');
+
+	const data = await request.formData();
+	const unit = Object.fromEntries(data.entries());
+
+	const user = await auth.getUser();
+	console.log(`User in POST unit route: ${user}`);
+	const userId = user?.$id;
+	if (!userId) return NextResponse.json({ error: 'No user ID found' }, { status: 403 });
+	unit.owner = userId;
+
+	// Ensure { monthlyrent, squaremeters, bathrooms, bedrooms } are numbers, if not appwrite will throw an error
+		['monthlyrent', 'squaremeters', 'bathrooms', 'bedrooms', 'deposit', 'rating'].forEach(key => {
+			if (unit[key]) {
+				if (typeof unit[key] === 'string') {
+					unit[key] = parseInt(unit[key] as string) as unknown as FormDataEntryValue;
+				}
+			}
+		});
+
+		const unitId = unit.$id as string;
+
+	try {
+		const { databases } = await createSessionClient(sessionCookie?.value);
+		const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
+		const collectionId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID_UNITS;
+		if (!databaseId || !collectionId) {
+			throw new Error('Database ID or collection ID is not defined');
+		}
+		const updatedUnit = await databases.updateDocument(databaseId, collectionId, unitId, unit);
+		revalidatePath('/units');
+		return NextResponse.json(updatedUnit);
+	} catch (error) {
+		console.error(error);
+		return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+	}
+}
+
+
