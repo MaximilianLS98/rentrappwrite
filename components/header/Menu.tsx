@@ -22,7 +22,7 @@ export default async function Menu() {
 		</div>
 	) : (
 		<Link href='/login'>
-			<Button variant='outline'>Login</Button>
+			<Button variant='outline'>Logg inn</Button>
 		</Link>
 	);
 
