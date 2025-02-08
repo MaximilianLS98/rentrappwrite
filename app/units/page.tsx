@@ -4,6 +4,8 @@ import { axiosInstance } from '@/utils/axios';
 import { axiosInstanceClient } from '@/utils/clientAxios';
 import UnitCard from '@/components/unitcard/UnitCard';
 import AddRandomUnit from '@/components/temp/AddRandomUnit';
+import { Plus } from 'lucide-react';
+import Link from 'next/link';
 // import { cookies } from 'next/headers';
 
 interface Unit {
@@ -46,11 +48,16 @@ export default function Units() {
     // })
 
 	return (
-		<div className='container mx-auto p-4'> 
-			<h1>Units</h1>
-            <div className='fixed bottom-10 left-10 m-2'>
-			    <AddRandomUnit setUnits={setUnits} />
-            </div>
+		<div className='container mx-auto p-4'>
+			<div className='flex mt-8 mb-4 justify-between'>
+				<h1 className='text-5xl'>Enheter</h1>
+                <Link href='/units/create' className='my-auto hover:text-teal-500'>
+                    <Plus size={32} className='' />
+                </Link>
+			</div>
+			<div className='fixed bottom-10 left-10 m-2'>
+				<AddRandomUnit setUnits={setUnits} />
+			</div>
 			<section className='flex-1'>
 				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
 					{units?.map((unit: any) => {
@@ -58,9 +65,9 @@ export default function Units() {
 					})}
 				</div>
 			</section>
-            <section className='mx-auto flex flex-wrap justify-center'>
-			    {/* <pre>{JSON.stringify(units, null, 2)}</pre> */}
-            </section>
+			<section className='mx-auto flex flex-wrap justify-center'>
+				{/* <pre>{JSON.stringify(units, null, 2)}</pre> */}
+			</section>
 		</div>
 	);
 }

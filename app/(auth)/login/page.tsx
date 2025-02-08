@@ -10,11 +10,11 @@ export default async function Login() {
     } 
 
     return (
-		<div className='flex flex-col items-center justify-center min-h-screen'>
-			<h1 className='text-3xl font-bold mb-6'>Login</h1>
+		<div className='flex flex-col items-center justify-center pb-8 lg:justify-normal lg:mt-12 min-h-screen'>
+			<h1 className='text-3xl font-bold mb-6'>Logg inn</h1>
 			<form
 				action={auth.createSession}
-				className='bg-primary-foreground p-8 rounded shadow-md w-full max-w-sm'>
+				className='bg-secondary p-8 rounded shadow-md w-full max-w-sm'>
 				<div className='mb-4'>
 					<input
 						type='email'
@@ -29,17 +29,17 @@ export default async function Login() {
 					<input
 						type='password'
 						name='password'
-						placeholder='Password'
+						placeholder='Passord'
 						required
 						className='w-full p-2 border border-accent rounded'
 						defaultValue={'Maxi123498'} // ! TODO: Remove this
 					/>
 				</div>
 				<Button type='submit' className='w-full p-2 rounded' variant={'default'}>
-					Login
+					Logg inn
 				</Button>
 				<Link href='/signup'>
-					<p className='text-accent-foreground text-center mt-4'>Dont have an account? Sign Up</p>
+					<p className='text-accent-foreground text-center mt-4'>Har du ikke en bruker? Registrer deg her</p>
 				</Link>
 			</form>
 		</div>
