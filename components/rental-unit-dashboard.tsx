@@ -16,6 +16,7 @@ import AppwriteImage from './appwriteImage';
 import DeleteButton from './unitcard/DeleteButton';
 import { cookies } from 'next/headers';
 import IncomeGraph from './landlordDashboard/IncomeGraph';
+import Link from 'next/link';
 
 
 export async function RentalUnitDashboardComponent({ unit }: any) {
@@ -99,9 +100,11 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 					</CardHeader>
 					<CardContent>
 						<div className='space-y-2'>
+							<Link href={`/units/${unit.$id}/edit`}>
 							<Button className='w-full rounded' variant='outline'>
 								<Edit className='mr-2 h-4 w-4' /> Edit Unit
 							</Button>
+							</Link>
 							{/* <Popover>
 								<PopoverTrigger asChild>
 									<Button variant='outline' className='w-full'>
