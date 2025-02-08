@@ -10,7 +10,7 @@ export const menuConstants = [
 	// 	href: '/marketplace',
 	// },
 	{
-		name: 'Units',
+		name: 'Enheter',
 		id: 'units',
 		href: '/units',
 	},
