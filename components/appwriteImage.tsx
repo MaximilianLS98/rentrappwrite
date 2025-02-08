@@ -9,6 +9,7 @@ interface AppwriteImageProps {
 	height?: number;
 	output?: string;
 	alt?: string;
+	quality?: number;
 }
 
 export default async function AppwriteImage({
@@ -17,13 +18,16 @@ export default async function AppwriteImage({
 	height,
 	output,
 	alt = 'Appwrite Image',
+	quality = 30,
 }: AppwriteImageProps) {
+	// ! I DONT THINK THIS PART WORKS IN PRODUCTION, BECAUSE ITS HARDCODED TO LOCALHOST
 	//! const src = `http://localhost:3000/api/storage/${fileId}`;
 	// const source = await axiosInstanceClient.get(`/storage/${fileId}`);
 	const imageUrl = `http://localhost:3000/api/bucket/images/${fileId}?${new URLSearchParams({
 		...(width && { width: width.toString() }),
 		...(height && { height: height.toString() }),
 		...(output && { output }),
+		... (quality && { quality: quality.toString() }),
 	})}`;
 
 	try {
