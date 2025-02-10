@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { createAdminClient, createSessionClient } from '@/appwrite/config';
+import { createClientSessionClient } from '@/lib/appwrite'; // This is here to create clientside session client, for realtime. (client is imported from appwrite and not node-appwrite)
 import { redirect } from 'next/navigation';
 import { ID } from 'node-appwrite';
 
@@ -46,9 +47,7 @@ const auth: Auth = {
 
 		const { account } = await createAdminClient();
 		const session = await account.createEmailPasswordSession(email, password);
-
 		console.log(`Session created: ${session.secret}`);
-
 		cookieObj.set('session', session.secret, {
 			httpOnly: true,
 			secure: true,
@@ -56,7 +55,14 @@ const auth: Auth = {
 			expires: new Date(session.expire),
 			path: '/',
 		});
-
+		cookieObj.set(`a_session_${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}`, session.secret, {
+			httpOnly: true,
+			secure: true,
+			sameSite: 'strict',
+			domain: process.env.NODE_ENV === 'development' ? 'localhost' : '.kaktusfamilien.com',
+			// domain: 'appwrite.kaktusfamilien.com',
+			expires: new Date(session.expire),
+		});
 		redirect('/');
 	},
 	logOut: async () => {
@@ -70,6 +76,7 @@ const auth: Auth = {
 			console.log(error);
 		}
 		cookieObj.delete('session');
+		cookieObj.delete(`a_session_${process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID}`);
 		auth.user = null;
 		auth.sessionCookie = null;
 		redirect('/');
