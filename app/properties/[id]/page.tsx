@@ -16,13 +16,7 @@ type Property = {
 	$collectionId: string;
 };
 
-type Props = {
-    params: {
-        id: string;
-    };
-};
-
-export default async function Page(props:Props) {
+export default async function Page(props:any) {
     const { id } = await props.params;
 	const session = (await cookies()).get('session')?.value as string;
     
