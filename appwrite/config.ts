@@ -39,6 +39,9 @@ const createSessionClient = async (session: any) => {
         },
         get storage() {
             return new Storage(client);
+        },
+        get client() {
+            return client;
         }
     }
 };
