@@ -5,12 +5,8 @@ import { cookies } from "next/headers";
 // ? This file is for uploading images to the storage bucket, and also handles creating metadata for the images in the database
 // ? and updating the relevant unit with the image metadata
 
-async function fileToUint8Array(file:File) {
-	const buffer = await file.arrayBuffer();
-	return new Uint8Array(buffer);
-}
-
-const uploadImage = async (image:File, unitId:string) => {
+// ? Server action to upload image to storage bucket and create metadata in database, only supports one image at a time so call this function for each image
+const uploadImage = async (image:File, unitId?:string) => {
     // Get the session cookie
     const cookieObj = await cookies();
     const sessionCookie = cookieObj.get('session')?.value as string;
@@ -35,7 +31,7 @@ const uploadImage = async (image:File, unitId:string) => {
         throw new Error('Database ID or collection ID is not defined');
     }
     const unit = await databases.createDocument(databaseId, collectionId, file.$id, {
-        units: unitId,
+        units: unitId ?? null,
         name: image.name,
         type: image.type,
         size: image.size,
@@ -45,6 +41,30 @@ const uploadImage = async (image:File, unitId:string) => {
     return { message: `Image created`, metadata: unit, file };
 }
 
+// ? Server action to assign image to unit, by updating the metadata in the database, not the actual image in the storage bucket
+const assignImageToUnit = async (imageId:string, unitId:string) => {
+    // Get the session cookie
+    const cookieObj = await cookies();
+    const sessionCookie = cookieObj.get('session')?.value as string;
+
+    // Create the database client
+    const { databases } = await createSessionClient(sessionCookie);
+
+    // Update the unit with the image ID
+    const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
+    const collectionId = process.env.NEXT_PUBLIC_APPWRITE_COLLECTION_ID_IMAGEMETADATA;
+    if (!databaseId || !collectionId) {
+        throw new Error('Database ID or collection ID is not defined');
+    }
+    const metadata = await databases.updateDocument(databaseId, collectionId, imageId, {
+        units: unitId,
+    });
+
+    // Return the updated unit
+    return metadata;
+}
+
+// ! - Untested
 const getImagePreview = async (imageId:string) => {
     // Get the session cookie
 	const sessionCookie = (await cookies()).get('session')?.value as string;
@@ -66,6 +86,7 @@ const getImagePreview = async (imageId:string) => {
     return file;
 }
 
+// ? Server action to get the list of all images and all their metadata for the current user
 const getImageIdList = async () => {
     // Get the session cookie
     const cookieObj = await cookies();
@@ -88,4 +109,4 @@ const getImageIdList = async () => {
     return files.files;
 }
 
-export { uploadImage, getImagePreview, getImageIdList };
+export { uploadImage, getImagePreview, getImageIdList, assignImageToUnit };
