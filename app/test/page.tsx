@@ -41,11 +41,11 @@ export default async function Test() {
 
   return (
 		<main className='flex min-h-screen flex-col items-center justify-between p-24'>
-			<form action={handleUpload} encType='multipart/form-data' method='POST' className='flex gap-4'>
-				<label>Select multiple images:</label>
-				<input type='file' name='files' accept='image/*' multiple />
-				<button type='submit'>Upload Images</button>
-			</form>
+      <form action={handleUpload} method='POST' className='flex flex-col items-center gap-4 p-4 border rounded-lg shadow-md'>
+        <label className='text-lg font-semibold'>Select multiple images:</label>
+        <input type='file' name='files' accept='image/*' multiple className='p-2 border rounded-md' />
+        <button type='submit' className='px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600'>Upload Images</button>
+      </form>
 			{/* <UploadFile /> */}
 			{/* <pre>{JSON.stringify(units, null, 2)}</pre> */}
 			<pre>{JSON.stringify(properties, null, 2)}</pre>
