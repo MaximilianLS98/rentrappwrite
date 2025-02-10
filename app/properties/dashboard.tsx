@@ -6,6 +6,8 @@ import { UnitList } from '../../components/UnitList';
 import { MaintenanceRequests } from '../../components/MaintenanceRequests';
 import { OccupancyChart } from '../../components/OccupancyChart';
 import { RevenueChart } from '../../components/RevenueChart';
+import { Button } from '../../components/ui/button';
+import Link from 'next/link';
 
 // Mock data
 const propertyData = {
@@ -115,7 +117,19 @@ export default function Dashboard(props: Props) {
   
 	return (
 		<div className='container mx-auto p-4 space-y-4'>
-			<h1 className='text-3xl font-bold mb-4'>Dashboard</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <div className="space-x-2">
+          <Link href="/properties/create">
+            <Button variant={'outline'}>Legg til eiendom</Button>
+          </Link>
+          <Link href="/units/create">
+            <Button variant={'outline'}>Legg til enhet</Button>
+          </Link>
+          {/* <AddPropertyButton /> */}
+          {/* <AddUnitButton /> */}
+        </div>
+      </div>
 
 			<PropertyOverview {...propertyData} properties={props.properties} units={props.units} />
 
