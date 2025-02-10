@@ -15,15 +15,25 @@ export const menuConstants = [
 		href: '/units',
 	},
 	{
-		name: 'Utleier',
+		name: 'Oversikt',
+		id: 'properties',
+		href: '/properties',
+	},
+	{
+		name: 'Dashboard',
 		id: 'utleier',
 		href: '/dashboard',
 	},
 	{
-		name: 'Chat',
-		id: 'chat',
-		href: '/chat',
+		name: 'Test',
+		id: 'test',
+		href: '/test',
 	},
+	// {
+	// 	name: 'Chat',
+	// 	id: 'chat',
+	// 	href: '/chat',
+	// },
 ];
 
 interface MenuElement {
