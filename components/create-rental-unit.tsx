@@ -15,9 +15,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { axiosInstanceClient } from '@/utils/clientAxios';
 import { X } from 'lucide-react';
-import { AxiosResponse } from 'axios';
 
 interface UnitImage {
 	file: File;
