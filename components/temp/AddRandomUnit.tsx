@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 
 type props = {
-    setUnits: any;
+    setUnits?: any;
 }
 
 interface TrandomData {
@@ -94,7 +94,7 @@ export default function AddRandomUnit(props: props) {
 			});
 			const realId = response.data.$id;
 			randomDataNew.$id = realId;
-			props.setUnits((prev: any) => [...prev, randomDataNew]);
+			// props.setUnits((prev: any) => [...prev, randomDataNew]);
 			router.refresh();
 			toast({
 				title: 'Unit Added',
