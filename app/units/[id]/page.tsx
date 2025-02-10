@@ -2,37 +2,18 @@ import { axiosInstanceClient } from '@/utils/clientAxios';
 import { cookies } from 'next/headers';
 import UnitCard from '@/components/unitcard/UnitCard';
 import { RentalUnitDashboardComponent } from '@/components/rental-unit-dashboard';
+import { getUnitById } from '@/actions/units';
 
 export default async function Unit(props: any) {
-	const id = await (props.params).id;
-	const allCookies = await cookies();
-	const sessionCookie = allCookies.get('session')?.value;
+	const { id } = await props.params;
+	const session = (await cookies()).get('session')?.value as string;
 
-	const { data } = await axiosInstanceClient.get(`api/units/${id}`, {
-		headers: {
-			cookie: `session=${sessionCookie}`,
-		},
-	});
-
-    if(data.code === 404) {
-        throw new Error('Unit not found');
-    }
-
-    if(data.error) {
-        throw new Error(data.error);
-    }
+	const unit = await getUnitById(session, id) as any;
 
 	return (
 		<main>
-            <RentalUnitDashboardComponent unit={data} />
-			<section>
-				{/* <h1>Sinlge unit page</h1>
-				<pre>{JSON.stringify(altData(), null, 2)}</pre>
-				<pre>{JSON.stringify(data, null, 2)}</pre>
-				<div className='max-w-lg mx-auto'>
-					<UnitCard unit={data} />
-				</div> */}
-			</section>
+			<RentalUnitDashboardComponent {...unit} />
+			<pre>{JSON.stringify(unit, null, 2)}</pre>
 		</main>
 	);
 }
