@@ -17,17 +17,12 @@ import DeleteButton from './unitcard/DeleteButton';
 import { cookies } from 'next/headers';
 import IncomeGraph from './landlordDashboard/IncomeGraph';
 import Link from 'next/link';
+import { getImageIdList } from '@/actions/images';
 
 
-export async function RentalUnitDashboardComponent({ unit }: any) {
-	const allCookies = await cookies();
-	const sessionCookie = allCookies.get('session')?.value;
-	const { data } = await axiosInstanceClient.get('api/bucket', {
-		headers: {
-			cookie: `session=${sessionCookie}`,
-		},
-	});
-
+export async function RentalUnitDashboardComponent(unit: any) {
+	const imageIdList = await getImageIdList();
+	
 	const graphData = [
 		{ year: '2020', unitIncome: 12000, areaIncome: 15000, forecast: 13000 },
 		{ year: '2021', unitIncome: 12500, areaIncome: 15500, forecast: 13500 },
@@ -144,7 +139,7 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 						</CardHeader>
 						<CardContent>
 							<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-								{data.files.map((file: any) => (
+								{imageIdList.map((file: any) => (
 									<AppwriteImage fileId={file.$id} width={300} height={200} />
 								))}
 							</div>
@@ -182,7 +177,6 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 					</Card>
 				</TabsContent>
 			</Tabs>
-			<pre>{JSON.stringify(unit, null, 2)}</pre>
 		</div>
 	);
 }
