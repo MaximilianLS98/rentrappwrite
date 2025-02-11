@@ -4,6 +4,7 @@ import './globals.css';
 import { ThemeProvider } from 'next-themes';
 import { CookiesProvider } from 'next-client-cookies/server';
 import { Toaster } from '@/components/ui/toaster';
+import { ToasterSonner } from '@/components/ui/sonner';
 import Header from '@/components/header/Header';
 import { Suspense } from 'react';
 
@@ -27,6 +28,7 @@ export default function RootLayout({
 						<Header />
 						{children}
 						<Toaster />
+						<ToasterSonner richColors />
 					</ThemeProvider>
 				</CookiesProvider>
 			</body>
