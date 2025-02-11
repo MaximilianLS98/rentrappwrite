@@ -21,7 +21,8 @@ import { getImageIdList } from '@/actions/images';
 
 
 export async function RentalUnitDashboardComponent(unit: any) {
-	const imageIdList = await getImageIdList();
+	const sessionCookie = (await cookies()).get('session')?.value as string;
+	const imageIdList = await getImageIdList(sessionCookie);
 	
 	const graphData = [
 		{ year: '2020', unitIncome: 12000, areaIncome: 15000, forecast: 13000 },
