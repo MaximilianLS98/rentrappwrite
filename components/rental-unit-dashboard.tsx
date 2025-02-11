@@ -141,7 +141,7 @@ export async function RentalUnitDashboardComponent(unit: any) {
 						<CardContent>
 							<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
 								{imageIdList.map((file: any) => (
-									<AppwriteImage fileId={file.$id} width={300} height={200} />
+									<AppwriteImage fileId={file.$id} width={300} height={200} key={file.$id} />
 								))}
 							</div>
 							<UploadMultipleFiles />
