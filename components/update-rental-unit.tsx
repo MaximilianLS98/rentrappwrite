@@ -15,28 +15,31 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { axiosInstanceClient } from '@/utils/clientAxios';
 import { X } from 'lucide-react';
+import { AxiosResponse } from 'axios';
 
 interface UnitImage {
 	file: File;
 	preview: string;
 }
 
-export function CreateRentalUnitComponent() {
+export function UpdateRentalUnitComponent(props: any) {
 	const router = useRouter();
 	const { toast } = useToast();
 	// const session = getCookie('session');
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [images, setImages] = useState<UnitImage[]>([]);
 	const [unit, setUnit] = useState({
-		title: 'Default Title',
-		housingtype: 'apartment',
-		bedrooms: 1,
-		bathrooms: 1,
-		squaremeters: 45,
-		address: 'Tulleveien 1',
-		monthlyrent: 4500,
-		description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+		title: props.title,
+		housingtype: props.housingtype,
+		bedrooms: props.bedrooms,
+		bathrooms: props.bathrooms,
+		squaremeters: props.squaremeters,
+		address: props.address,
+		monthlyrent: props.monthlyrent,
+		description: props.description,
+        $id: props.$id,
 	});
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -91,23 +94,23 @@ export function CreateRentalUnitComponent() {
 			// 	`Form data in create-rental-unit: ${JSON.stringify(formData.get('title'))}`,
 			// );
 			const response = await fetch('/api/units', {
-				method: 'POST',
+				method: 'PUT',
 				body: formData,
 			});
 			if (response.status === 200) {
 				toast({
 					title: 'Success',
-					description: 'Rental unit created successfully',
+					description: 'Rental unit updated successfully',
 				});
 				router.push('/units');
 				router.refresh();
 			} else {
-				throw new Error('Failed to create rental unit');
+				throw new Error('Failed to update rental unit');
 			}
 		} catch (error) {
 			toast({
 				title: 'Error',
-				description: 'Failed to create rental unit',
+				description: 'Failed to update rental unit',
 				variant: 'destructive',
 			});
 		}
@@ -115,7 +118,7 @@ export function CreateRentalUnitComponent() {
 
 	return (
 		<div className='container mx-auto p-4'>
-			<h1 className='text-2xl font-bold mb-6'>Opprett ny enhet</h1>
+			<h1 className='text-2xl font-bold mb-6'>Rediger enhet</h1>
 			<div className='flex flex-col lg:flex-row gap-6'>
 				<form onSubmit={handleSubmit} className='space-y-4 flex-1'>
 					<div>
@@ -260,7 +263,7 @@ export function CreateRentalUnitComponent() {
 						</div>
 					)}
 					<Button type='submit' className='w-full rounded'>
-						Opprett enhet
+						Oppdater enhet
 					</Button>
 				</form>
 

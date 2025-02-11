@@ -74,7 +74,7 @@ export async function PUT(request: NextRequest, props: Props) {
 export async function DELETE(request: NextRequest, props: Props) {
 	const params = await props.params;
 	const { id } = params;
-    // TODO Remeber to delete the metadata from the database as well
+    // TODO Remember to delete the metadata from the database as well
 	return NextResponse.json({
 		message: `Trying to delete a single thing from bucket storage by ${id}!`,
 	});

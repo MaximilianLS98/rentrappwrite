@@ -1,29 +1,44 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, Upload, FileText, Home, Edit, Trash2, User, DollarSign, Calendar as CalendarIcon } from "lucide-react"
-import { format } from 'date-fns'
-import { Calendar as CalendarComponent } from "@/components/ui/calendar"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import Image from 'next/image'
-import imagePlaceholder from '@/public/placeholder.png'
-import UploadFile from './UploadFile'
-import UploadMultipleFiles from './UploadMultipleFiles'
-import { axiosInstanceClient } from "@/utils/clientAxios"
-import AppwriteImage from './appwriteImage'
-import DeleteButton from './unitcard/DeleteButton'
-import { cookies } from "next/headers"
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+	FileText,
+	Home,
+	Edit,
+	User,
+	DollarSign,
+	Calendar as CalendarIcon,
+} from 'lucide-react';
+import UploadFile from './UploadFile';
+import UploadMultipleFiles from './UploadMultipleFiles';
+import { axiosInstanceClient } from '@/utils/clientAxios';
+import AppwriteImage from './appwriteImage';
+import DeleteButton from './unitcard/DeleteButton';
+import { cookies } from 'next/headers';
+import IncomeGraph from './landlordDashboard/IncomeGraph';
+import Link from 'next/link';
+import { getImageIdList } from '@/actions/images';
 
-export async function RentalUnitDashboardComponent({ unit }: any) {
-	const allCookies = await cookies();
-  const sessionCookie = allCookies.get('session')?.value;
-   const { data } = await axiosInstanceClient.get('api/bucket',
-    {
-      headers: {
-        cookie: `session=${sessionCookie}`,
-      },
-    }
-   );
+
+export async function RentalUnitDashboardComponent(unit: any) {
+	const imageIdList = await getImageIdList();
+	
+	const graphData = [
+		{ year: '2020', unitIncome: 12000, areaIncome: 15000, forecast: 13000 },
+		{ year: '2021', unitIncome: 12500, areaIncome: 15500, forecast: 13500 },
+		{ year: '2022', unitIncome: 13000, areaIncome: 16000, forecast: 14000 },
+		{ year: '2023', unitIncome: 13500, areaIncome: 16500, forecast: 14500 },
+		{ year: '2024', unitIncome: 14000, areaIncome: 17000, forecast: 15000 },
+	];
+
+	const incomeData = [
+		{ month: 'Jan', income: 10000 },
+		{ month: 'Feb', income: 12000 },
+		{ month: 'Mar', income: 11000 },
+		{ month: 'Apr', income: 13000 },
+		{ month: 'May', income: 12500 },
+		{ month: 'Jun', income: 13500 },
+	];
 
 	return (
 		<div className='container mx-auto p-4'>
@@ -80,9 +95,11 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 					</CardHeader>
 					<CardContent>
 						<div className='space-y-2'>
+							<Link href={`/units/${unit.$id}/edit`}>
 							<Button className='w-full rounded' variant='outline'>
 								<Edit className='mr-2 h-4 w-4' /> Edit Unit
 							</Button>
+							</Link>
 							{/* <Popover>
 								<PopoverTrigger asChild>
 									<Button variant='outline' className='w-full'>
@@ -108,6 +125,8 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 				</Card>
 			</div>
 
+			<IncomeGraph data={graphData} />
+
 			<Tabs defaultValue='images' className='w-full'>
 				<TabsList>
 					<TabsTrigger value='images'>Bilder</TabsTrigger>
@@ -120,7 +139,7 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 						</CardHeader>
 						<CardContent>
 							<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
-								{data.files.map((file: any) => (
+								{imageIdList.map((file: any) => (
 									<AppwriteImage fileId={file.$id} width={300} height={200} />
 								))}
 							</div>
@@ -158,7 +177,6 @@ export async function RentalUnitDashboardComponent({ unit }: any) {
 					</Card>
 				</TabsContent>
 			</Tabs>
-			<pre>{JSON.stringify(unit, null, 2)}</pre>
 		</div>
 	);
 }

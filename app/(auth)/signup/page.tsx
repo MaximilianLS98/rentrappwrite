@@ -10,7 +10,7 @@ export default async function SignUp() {
 	}
 
 	return (
-		<div className='flex flex-col items-center justify-center min-h-screen'>
+		<div className='flex flex-col items-center justify-center pb-8 lg:justify-normal lg:mt-12 min-h-screen'>
 			<h1 className='text-3xl font-bold mb-6'>Opprett konto</h1>
 			<form
 				action={auth.signUp}
@@ -28,13 +28,13 @@ export default async function SignUp() {
 					<input
 						type='password'
 						name='password'
-						placeholder='Password'
+						placeholder='Passord'
 						required
 						className='w-full p-2 border border-accent rounded'
 					/>
 				</div>
 				<Button type='submit' className='w-full p-2 rounded' variant={'default'}>
-					Sign Up
+					Registrer
 				</Button>
 			</form>
 		</div>

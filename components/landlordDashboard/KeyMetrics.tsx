@@ -12,7 +12,7 @@ type unit = {
 export default function KeyMetrics({ units } : { units: any }) {
 	const rentalRate = (units.filter((unit: unit) => unit.status === 'Occupied').length / units.length * 100).toFixed(1);
 	const vacancyRate = (units.filter((unit: unit) => unit.status === 'Vacant').length / units.length * 100).toFixed(1);
-	const avgRent = (units.reduce((acc: number, unit: unit) => acc + unit.monthlyrent, 0) / units.length * 10).toFixed(0);
+	const avgRent = (units.reduce((acc: number, unit: unit) => acc + unit.monthlyrent, 0) / units.length * 1).toFixed(0);
 	const properties = units.length;
     return (
 		<Card key='key-metrics' className='h-full overflow-clip'>

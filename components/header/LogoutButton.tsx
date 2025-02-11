@@ -5,7 +5,7 @@ export default function LogoutButton() {
 
     return (
 		<form action={auth.logOut}>
-			<Button className='rounded' variant='outline'>Log out</Button>
+			<Button className='rounded' variant='outline'>Logg ut</Button>
 		</form>
 	);
 }

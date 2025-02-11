@@ -3,16 +3,18 @@ import { Client, Account, Databases, Storage } from 'appwrite';
 const endpoint = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT;
 const project = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID;
 if (!endpoint || !project) {
-	throw new Error('Appwrite endpoint and project ID must be set');
+	throw new Error('Appwrite endpoint and project ID must be set to create clientsm, appwrite.ts');
 }
 const createSimpleClient = (session:any) => {
-const simpleClient = new Client()
-    .setEndpoint(endpoint)
-    .setProject(project);
-    if (session) {
-        simpleClient.setSession(session);
-    }
-    return simpleClient;
+    console.log(session);
+    console.log(`Setting session in createSimpleClient SIMPLE without session, unless this is true: ${session ? 'true' : 'false'}`);
+    const simpleClient = new Client()
+        .setEndpoint(endpoint)
+        .setProject(project);
+        if (session) {
+            simpleClient.setSession(session);
+        }
+        return simpleClient;
 }
 
 const createClientSessionClient = async (session: any) => {
@@ -22,17 +24,6 @@ const createClientSessionClient = async (session: any) => {
 		.setProject(project)
         .setSession(session);
 
-        
-
-	// if (session) {
-    //     console.log(`Setting session in createClientSessionClient: ${session ? 'true' : 'false'}`);
-	// 	client.setSession(session);
-	// }
-
-    const unsubscribe = client.subscribe(`documents`, response => {
-        console.log(`Realtime response in createClientSessionClient: ${response}`);
-    }
-    ); 
 
 	return {
 		get account() {

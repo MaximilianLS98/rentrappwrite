@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Building, FileText, Calendar, Image, CheckCircle } from "lucide-react"
-import Link from "next/link"
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Building, FileText, Calendar, Image, CheckCircle } from 'lucide-react';
+import Link from 'next/link';
 
 export function LandingPageComponent() {
-  return (
+	return (
 		<div className='flex flex-col min-h-screen'>
 			<main className='flex-1'>
 				<section className='w-full py-12 md:py-24 lg:py-32 xl:py-48'>
@@ -14,19 +14,20 @@ export function LandingPageComponent() {
 						<div className='absolute -top-1/2 -left-1/2 w-[200%] h-[200%] rounded-full bg-gradient-to-br from-primary/40 via-secondary/30 to-accent/20 blur-3xl' />
 					</div>
 					<div className='container px-4 md:px-6'>
-						<div className='flex flex-col items-center space-y-4 text-center'>
+						<div className='flex flex-col items-center space-y-4 text-center gap-4'>
 							<div className='space-y-2'>
-								<h1 className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none'>
-									Manage Your Rental Properties with Ease
+								<h1 className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none mb-8'>
+									Full kontroll over dine utleieenheter
 								</h1>
 								<p className='mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400'>
-									RentR helps you organize, track, and manage all your rental
-									units in one place. Save time and increase efficiency.
+									RentR hjelper deg med å holde dokumenter, bilder, frister og
+									annet organisert og lett tilgjengelig, på ett sted. Spar tid og
+									øk effektiviteten.
 								</p>
 							</div>
 							<div className='space-x-4'>
-								<Button>Get Started</Button>
-								<Button variant='outline'>Learn More</Button>
+								<Button className='bg-teal-500'>Kom igang</Button>
+								<Button variant='outline'>Les mer</Button>
 							</div>
 						</div>
 					</div>
@@ -231,5 +232,5 @@ export function LandingPageComponent() {
 				</nav>
 			</footer>
 		</div>
-  );
+	);
 }
