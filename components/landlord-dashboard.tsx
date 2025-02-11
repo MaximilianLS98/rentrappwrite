@@ -212,7 +212,6 @@ export function LandlordDashboardComponent({
 					return <TenantRequests key='tenant-requests' />;
 				case 'market-trends':
 					return <MarketTrends key='market-trends' />;
-
 				case 'messages':
 					return <MessagesComponent key='messages' />;
 				default:
