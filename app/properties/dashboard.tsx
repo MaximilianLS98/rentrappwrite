@@ -80,6 +80,20 @@ const maintenanceRequests = [
 		priority: 'Medium',
 		status: 'Open',
 	},
+	{
+		id: '4',
+		unit: '789 Oak Ave',
+		description: 'Paint touch-up',
+		priority: 'Medium',
+		status: 'Open',
+	},
+	{
+		id: '5',
+		unit: '789 Oak Ave',
+		description: 'Paint touch-up',
+		priority: 'Medium',
+		status: 'Open',
+	},
 ] as MaintenanceRequest[];
 
 const occupancyData = {
@@ -117,21 +131,26 @@ export default function Dashboard(props: Props) {
   
 	return (
 		<div className='container mx-auto p-4 space-y-4'>
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <div className="space-x-2">
-          <Link href="/properties/create">
-            <Button variant={'outline'}>Legg til eiendom</Button>
-          </Link>
-          <Link href="/units/create">
-            <Button variant={'outline'}>Legg til enhet</Button>
-          </Link>
-          {/* <AddPropertyButton /> */}
-          {/* <AddUnitButton /> */}
-        </div>
-      </div>
+			<div className='flex justify-between items-center'>
+				<h1 className='text-3xl font-bold'>Dashboard</h1>
+				<div className='space-x-2'>
+					<Link href='/properties/create'>
+						<Button variant={'outline'}>Legg til eiendom</Button>
+					</Link>
+					<Link href='/units/create'>
+						<Button variant={'outline'}>Legg til enhet</Button>
+					</Link>
+					{/* <AddPropertyButton /> */}
+					{/* <AddUnitButton /> */}
+				</div>
+			</div>
 
 			<PropertyOverview {...propertyData} properties={props.properties} units={props.units} />
+
+			<div className='grid gap-4 md:grid-cols-4'>
+				<UnitList units={props.units} />
+				<MaintenanceRequests requests={maintenanceRequests} />
+			</div>
 
 			<div className='grid gap-4 md:grid-cols-4'>
 				<FinancialSummary {...financialData} />
@@ -140,11 +159,6 @@ export default function Dashboard(props: Props) {
 			<div className='grid gap-4 md:grid-cols-2'>
 				<OccupancyChart {...occupancyData} />
 				<RevenueChart data={revenueData} />
-			</div>
-
-			<div className='grid gap-4 md:grid-cols-4'>
-				<UnitList units={props.units} />
-				<MaintenanceRequests requests={maintenanceRequests} />
 			</div>
 		</div>
 	);
