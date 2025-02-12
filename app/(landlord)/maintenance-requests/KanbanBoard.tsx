@@ -1,5 +1,5 @@
 'use client';
-
+// ! Not in use, using ./simpleKanbanBoard.tsx instead
 import { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { sampleRequests, type MaintenanceRequest } from './sample-requests';
@@ -74,7 +74,45 @@ function MaintenanceRequestsPage() {
 						{statusColumns.map((status) => (
 							<div key={status} className='flex-1 min-w-[250px]'>
 								<h2 className='font-semibold mb-2'>{status}</h2>
-								<Droppable droppableId={status}>
+								<Droppable 
+									droppableId={status}
+									renderClone={(provided, snapshot, rubric) => (
+										<div
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											ref={provided.innerRef}
+											className='bg-white p-2 rounded-md shadow-md'>
+											<Card>
+												<CardContent className='p-4'>
+													<h3 className='font-semibold mb-2'>
+														{requests[rubric.source.index].title}
+													</h3>
+													<p className='text-sm text-gray-600 mb-2'>
+														{requests[rubric.source.index].unit}
+													</p>
+													<div className='flex gap-2'>
+														<Badge>
+															{requests[rubric.source.index].type}
+														</Badge>
+														<Badge
+															variant={
+																requests[rubric.source.index].priority ===
+																'High'
+																	? 'destructive'
+																	: requests[rubric.source.index].priority ===
+																	  'Medium'
+																	? 'default'
+																	: 'secondary'
+															}>
+															{requests[rubric.source.index].priority}
+														</Badge>
+													</div>
+												</CardContent>
+											</Card>
+										</div>
+									)
+									}
+									>
 									{(provided: any) => (
 										<div
 											{...provided.droppableProps}
@@ -136,6 +174,7 @@ function MaintenanceRequestsPage() {
 					</div>
 				</DragDropContext>
 			</ErrorBoundary>
+			<pre>{JSON.stringify(requests, null, 2)}</pre>
 
 			<Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
 				<DialogContent>
@@ -192,7 +231,7 @@ function MaintenanceRequestsPage() {
 	);
 }
 
-export default function MaintenanceRequestsPageWrapper() {
+export default function KanbanBoard() {
 	return (
 		<ErrorBoundary fallback={<div>Something went wrong</div>}>
 			<MaintenanceRequestsPage />
