@@ -8,6 +8,10 @@ import { OccupancyChart } from '../../components/OccupancyChart';
 import { RevenueChart } from '../../components/RevenueChart';
 import { Button } from '../../components/ui/button';
 import Link from 'next/link';
+import {
+	TFetchMaintenanceRequests,
+	TMaintenanceRequest,
+} from '@/constants/types/maintenancerequests';
 
 // Mock data
 const propertyData = {
@@ -113,6 +117,7 @@ const revenueData = [
 type Props = {
   properties: any;
   units: any;
+  maintenancerequests: TMaintenanceRequest[];
 }
 
 
@@ -149,7 +154,7 @@ export default function Dashboard(props: Props) {
 
 			<div className='grid gap-4 md:grid-cols-4'>
 				<UnitList units={props.units} />
-				<MaintenanceRequests requests={maintenanceRequests} />
+				<MaintenanceRequests requests={maintenanceRequests} mrequests={props.maintenancerequests} />
 			</div>
 
 			<div className='grid gap-4 md:grid-cols-4'>
