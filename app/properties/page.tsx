@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import Dashboard from '@/app/properties/dashboard';
 import { getAllProperties } from '@/actions/properties';
 import { getAllUnits } from '@/actions/units';
-import { getAllMaintenanceRequests } from '@/actions/maintenanceRequests';
+import { getAllMaintenanceRequests, getActiveMaintenanceRequests } from '@/actions/maintenanceRequests';
 import {
 	TFetchMaintenanceRequests,
 	TMaintenanceRequest,
@@ -52,7 +52,7 @@ export default async function Page() {
 
     const units = await getAllUnits(session) as UnitFetch;
     const properties = await getAllProperties(session) as PropertyFetch;
-    const maintenancerequests = await getAllMaintenanceRequests(session) as TFetchMaintenanceRequests;
+    const maintenancerequests = await getActiveMaintenanceRequests(session) as TFetchMaintenanceRequests;
 
 	return (
 		<div className='container'>
@@ -65,11 +65,11 @@ export default async function Page() {
 				</div>
 			) : (
 				<Dashboard
-					properties={properties}
-					units={units}
-					maintenancerequests={maintenancerequests.documents}
-				/>
+                        properties={properties}
+                        units={units}
+                        maintenancerequests={maintenancerequests.documents} />
 			)}
+            <pre>{JSON.stringify(maintenancerequests, null, 4)}</pre>
 		</div>
 	);
 }
