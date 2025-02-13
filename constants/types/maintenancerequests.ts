@@ -1,3 +1,5 @@
+import { TUnit } from './units';
+
 const fetchedData = {
   "total": 1,
   "documents": [
@@ -37,7 +39,7 @@ type TMaintenanceRequest = {
 	$createdAt: string;
 	$updatedAt: string;
 	$permissions: string[];
-	units: string[];
+	units: TUnit;
 	$databaseId: string;
 	$collectionId: string;
 };
