@@ -12,6 +12,7 @@ import {
 	TFetchMaintenanceRequests,
 	TMaintenanceRequest,
 } from '@/constants/types/maintenancerequests';
+import auth from '@/utils/auth';
 
 // Mock data
 const propertyData = {
@@ -161,10 +162,10 @@ export default function Dashboard(props: Props) {
 				<FinancialSummary {...financialData} />
 			</div>
 
-			<div className='grid gap-4 md:grid-cols-2'>
+			{/* <div className='grid gap-4 md:grid-cols-2'>
 				<OccupancyChart {...occupancyData} />
 				<RevenueChart data={revenueData} />
-			</div>
+			</div> */}
 		</div>
 	);
 }
