@@ -21,8 +21,6 @@ interface MaintenanceRequestsProps {
 }
 
 export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequestsProps) {
-  console.log(`MaintenanceRequests: ${JSON.stringify(mrequests, null, 2)}`);
-  console.log(`MaintenanceRequests old: ${JSON.stringify(requests, null, 2)}`);
 
   const parseRequests = (requests: TMaintenanceRequest[]) => {
     // I want only critical and high priority requests, but if there are none, I want to show medium priority requests and so on, with max 5 requests and no entries with status 'closed'
@@ -34,6 +32,24 @@ export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequests
     const parsedRequests = [...criticalRequests, ...highRequests, ...mediumRequests, ...lowRequests];
     return parsedRequests;
   }
+
+  const translatedPriority = (priority: string) => {
+    switch (priority) {
+      case 'low':
+      return 'Lav';
+      case 'medium':
+      return 'Middels';
+      case 'high':
+      return 'Høy';
+      case 'critical':
+      return 'Kritisk';
+      default:
+      return priority;
+    }
+  }
+
+  // requests is an array of request objects, each has a units key which is a single object with information about the unit, extract the title from the units object
+  const requestTitles = requests.map((request) => request.unit);
   
 	return (
 		<Card className='relative'>
@@ -55,10 +71,26 @@ export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequests
 								<div>
 									<div className='font-medium'>{request.title}</div>
 									<div className='text-sm text-muted-foreground'>
-										{request.description}
+										{requestTitles[index]}
 									</div>
 								</div>
-								<Badge
+                <Badge
+                  className={
+                    // The priority can be 'low', 'medium', 'high', 'critical', change color based on priority
+                    request.priority === 'low'
+                      ? 'bg-green-500'
+                      : request.priority === 'medium'
+                      ? 'bg-yellow-500'
+                      : request.priority === 'high'
+                      ? 'bg-orange-500'
+                      : request.priority === 'critical'
+                      ? 'bg-red-500'
+                      : 'bg-gray-500'
+                  }
+                >
+                  {translatedPriority(request.priority)}
+                </Badge>
+								{/* <Badge
                   className={
                     // the status can be 'open', 'inprogress', 'backlog', 'closed', change color based on status
                     request.status === 'open'
@@ -70,7 +102,7 @@ export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequests
                       : 'bg-green-500'
                   }>
 									{request.status}
-								</Badge>
+								</Badge> */}
 							</div>
 						);
 					})}
