@@ -4,7 +4,7 @@ type FetchUnit = {
 }
 
 type TUnit = {
-    name: string;
+    title: string;
     short: string;
     description: string;
     $id: string;
