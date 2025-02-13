@@ -1,6 +1,19 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 import { DragDropContext, Droppable, Draggable, type DropResult } from '@hello-pangea/dnd';
 import { ErrorBoundary } from 'react-error-boundary';
 import {
@@ -44,33 +57,57 @@ const initialData = {
 	columnOrder: ['backlog', 'open', 'inprogress', 'closed'],
 };
 
-type Request = {
-	id: string;
-	title: string;
-};
-
 function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 	const formatRequests = (requests: TMaintenanceRequest[]) => {
 		const formattedRequests = requests.reduce(
-			(acc: { [key: string]: { id: string; title: string } }, request) => {
-				acc[request.$id] = { id: request.$id, title: request.title };
+			(
+				acc: {
+					[key: string]: {
+						id: string;
+						title: string;
+						type: string;
+						priority: string;
+						status: string;
+						$createdAt: string;
+						description: string;
+						units: any;
+					};
+				},
+				request,
+			) => {
+				acc[request.$id] = {
+					id: request.$id,
+					title: request.title,
+					type: request.type,
+					priority: request.priority,
+					status: request.status,
+					$createdAt: request.$createdAt,
+					description: request.description,
+					units: request.units,
+				};
 				return acc;
 			},
 			{},
 		);
-		console.log(`Formatted requests: ${JSON.stringify(formattedRequests, null, 2)}`);
 		return formattedRequests;
 	};
 
 	const [formattedRequests, setFormattedRequests] = useState<{
-		[key: string]: { id: string; title: string };
+		[key: string]: {
+			id: string;
+			title: string;
+			type: string;
+			priority: string;
+			status: string;
+		};
 	}>(formatRequests(documents));
 	const [liveRequests, setLiveRequests] = useState<TMaintenanceRequest[]>(documents);
 	const [formattedColumns, setFormattedColumns] = useState<{
 		[key: string]: { id: string; title: string; requestIds: string[] };
 	}>(initialData.columns);
-
 	const [columnOrder, setColumnOrder] = useState(initialData.columnOrder);
+	const [selectedRequest, setSelectedRequest] = useState<any | null>(null);
+	const [newComment, setNewComment] = useState('');
 
 	const assignRequestsToColumns = (requests: TMaintenanceRequest[]) => {
 		// there should always be 4 columns, backlog, open, in progress, closed - the requests should be assigned to the columns based on their status
@@ -91,7 +128,6 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 			},
 			{},
 		);
-		console.log(`Formatted columns: ${JSON.stringify(formattedColumns, null, 2)}`);
 		return formattedColumns;
 	};
 
@@ -100,7 +136,7 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 			unstable_batchedUpdates(() => {
 				// formatRequests(liveRequests);
 				// assignRequestsToColumns(liveRequests);
-				setFormattedRequests(formatRequests(liveRequests));
+				// setFormattedRequests(formatRequests(liveRequests));
 				setFormattedColumns(assignRequestsToColumns(liveRequests));
 			}),
 		[liveRequests],
@@ -155,12 +191,44 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 		}
 	};
 
-    const formatTitle = (title: string) => {
-        // First letter of the word should be capitalized, and in case the word is "inprogress" should be "In Progress"
-        const newTitle = title === 'inprogress' ? 'In Progress' : title.charAt(0).toUpperCase() + title.slice(1);
-        return newTitle;
-    }
+	const formatTitle = (title: string) => {
+		switch (title) {
+			case 'backlog':
+				return 'Backlog';
+			case 'open':
+				return 'Åpen';
+			case 'inprogress':
+				return 'Under arbeid';
+			case 'closed':
+				return 'Lukket';
+			default:
+				return title;
+		}
+	};
 
+	// const handleAddComment = () => {
+	// 	if (selectedRequest && newComment.trim()) {
+	// 		const updatedRequest = {
+	// 			...selectedRequest,
+	// 			comments: [
+	// 				...selectedRequest.comments,
+	// 				{
+	// 					id: Date.now().toString(),
+	// 					text: newComment,
+	// 					date: new Date().toISOString().split('T')[0],
+	// 				},
+	// 			],
+	// 		};
+	// 		setFormattedRequests(
+	// 		  Object.values(formattedRequests).reduce((acc, r) => {
+	// 			acc[r.id] = r.id === updatedRequest.id ? updatedRequest : r;
+	// 			return acc;
+	// 		  }, {} as { [key: string]: { id: string; title: string; type: string; priority: string; status: string } })
+	// 		);
+	// 		setSelectedRequest(updatedRequest);
+	// 		setNewComment('');
+	// 	}
+	// };
 
 	return (
 		<div className='container mx-auto p-4'>
@@ -170,23 +238,14 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 					<div className='flex gap-4 overflow-x-auto pb-4'>
 						{columnOrder.map((columnId) => {
 							const column = formattedColumns[columnId];
-							console.log(`Column on line 157: ${JSON.stringify(column, null, 2)}`);
 							const columnRequests = column.requestIds.map(
 								(requestId) =>
 									formattedRequests?.[requestId] ?? { id: '', title: '' },
 							);
-							console.log(
-								`Column requests on line 160: ${JSON.stringify(
-									columnRequests,
-									null,
-									2,
-								)}`,
-							);
-
 							return (
 								<div key={columnId} className='flex-1 min-w-[250px]'>
 									<h2 className='font-semibold mb-2'>
-										{column.title}
+										{formatTitle(column.title)}
 									</h2>
 									<Droppable droppableId={columnId} key={columnId}>
 										{(provided) => (
@@ -200,12 +259,52 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 														draggableId={request.id}
 														index={index}>
 														{(provided) => (
+															// <div
+															// 	ref={provided.innerRef}
+															// 	{...provided.draggableProps}
+															// 	{...provided.dragHandleProps}
+															// 	className='bg-white p-4 rounded shadow'>
+															// 	{request.title}
+															// </div>
 															<div
 																ref={provided.innerRef}
 																{...provided.draggableProps}
 																{...provided.dragHandleProps}
-																className='bg-white p-4 rounded shadow'>
-																{request.title}
+																className='mb-2'>
+																<Card
+																	onClick={() =>
+																		setSelectedRequest(request)
+																	}>
+																	<CardContent className='p-4'>
+																		<h3 className='font-semibold mb-2'>
+																			{request.title}
+																		</h3>
+																		<div className='flex gap-2'>
+																			<Badge>
+																				{request.type}
+																			</Badge>
+																			<Badge
+																				className={
+																					request.priority ===
+																					'low'
+																						? 'bg-green-500'
+																						: request.priority ===
+																						  'medium'
+																						? 'bg-yellow-500'
+																						: request.priority ===
+																						  'high'
+																						? 'bg-orange-500'
+																						: request.priority ===
+																						  'critical'
+																						? 'bg-red-500'
+																						: ''
+																				}>
+																				{request.priority}
+																			</Badge>
+																		</div>
+                                                                        {/* <pre>{JSON.stringify(request, null, 2)}</pre> */}
+																	</CardContent>
+																</Card>
 															</div>
 														)}
 													</Draggable>
@@ -224,6 +323,66 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 				<pre>{JSON.stringify(formattedRequests, null, 2)}</pre>
 				<pre>{JSON.stringify(formattedColumns, null, 2)}</pre>
 			</div>
+			<Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>{selectedRequest?.title}</DialogTitle>
+						<DialogDescription>{selectedRequest?.description}</DialogDescription>
+					</DialogHeader>
+					<div className='grid gap-4 py-4'>
+						<div className='grid grid-cols-2 gap-4'>
+							<div>
+								<Label>Unit</Label>
+								<Input value={selectedRequest?.units.address} readOnly />
+							</div>
+							<div>
+								<Label>Type</Label>
+								<Input value={selectedRequest?.type} readOnly />
+							</div>
+							<div>
+								<Label>Priority</Label>
+								<Input value={selectedRequest?.priority} readOnly />
+							</div>
+							<div>
+								<Label>Status</Label>
+								<Input value={selectedRequest?.status} readOnly />
+							</div>
+						</div>
+						<div>
+							<Label>Dato registrert</Label>
+							<Input
+								value={new Date(selectedRequest?.$createdAt).toLocaleString(
+									'no-NO',
+								)}
+								readOnly
+							/>
+						</div>
+						{/* <div>
+							<Label>Comments</Label>
+							<div className='max-h-40 overflow-y-auto'>
+								{selectedRequest?.comments.map((comment:any) => (
+									<div key={comment.id} className='mb-2'>
+										<p className='text-sm'>{comment.text}</p>
+										<p className='text-xs text-gray-500'>{comment.date}</p>
+									</div>
+								))}
+							</div>
+						</div>
+						<div>
+							<Label htmlFor='new-comment'>Add Comment</Label>
+							<Input
+								id='new-comment'
+								value={newComment}
+								onChange={(e) => setNewComment(e.target.value)}
+								placeholder='Type your comment here...'
+							/>
+						</div> */}
+					</div>
+					<DialogFooter>
+						{/* <Button onClick={handleAddComment}>Add Comment</Button> */}
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }
