@@ -7,6 +7,7 @@ type TUnit = {
     title: string;
     short: string;
     description: string;
+    address: string;
     $id: string;
     $createdAt: string;
     $updatedAt: string;
