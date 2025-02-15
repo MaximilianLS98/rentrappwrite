@@ -29,78 +29,6 @@ const financialData = {
 	occupancyRate: 92,
 };
 
-interface Unit {
-	id: string;
-	name: string;
-	type: 'Single' | 'Multi';
-	totalUnits?: number;
-	occupiedUnits?: number;
-	status: 'Occupied' | 'Vacant' | 'Partially Occupied' | 'Maintenance';
-	rent: number;
-}
-const dummyunits = [
-	{ id: '1', name: '123 Main St', type: 'Single', status: 'Occupied', rent: 1500 },
-	{
-		id: '2',
-		name: '456 Elm St',
-		type: 'Multi',
-		totalUnits: 2,
-		occupiedUnits: 1,
-		status: 'Partially Occupied',
-		rent: 2400,
-	},
-	{ id: '3', name: '789 Oak Ave', type: 'Single', status: 'Maintenance', rent: 1800 },
-	{
-		id: '4',
-		name: '101 Pine Rd',
-		type: 'Multi',
-		totalUnits: 3,
-		occupiedUnits: 3,
-		status: 'Occupied',
-		rent: 3000,
-	},
-	{ id: '5', name: '202 Maple Ln', type: 'Single', status: 'Vacant', rent: 1600 },
-] as Unit[];
-
-interface MaintenanceRequest {
-	id: string;
-	unit: string;
-	description: string;
-	priority: 'Low' | 'Medium' | 'High';
-	status: 'Open' | 'In Progress' | 'Closed';
-}
-const maintenanceRequests = [
-	{ id: '1', unit: '123 Main St', description: 'Leaky faucet', priority: 'Low', status: 'Open' },
-	{
-		id: '2',
-		unit: '456 Elm St - Unit A',
-		description: 'Broken AC',
-		priority: 'High',
-		status: 'In Progress',
-	},
-	{
-		id: '3',
-		unit: '789 Oak Ave',
-		description: 'Paint touch-up',
-		priority: 'Medium',
-		status: 'Open',
-	},
-	{
-		id: '4',
-		unit: '789 Oak Ave',
-		description: 'Paint touch-up',
-		priority: 'Medium',
-		status: 'Open',
-	},
-	{
-		id: '5',
-		unit: '789 Oak Ave',
-		description: 'Paint touch-up',
-		priority: 'Medium',
-		status: 'Open',
-	},
-] as MaintenanceRequest[];
-
 const occupancyData = {
 	occupied: 10,
 	vacant: 2,
@@ -155,7 +83,7 @@ export default function Dashboard(props: Props) {
 
 			<div className='grid gap-4 md:grid-cols-4'>
 				<UnitList units={props.units} />
-				<MaintenanceRequests requests={maintenanceRequests} mrequests={props.maintenancerequests} />
+				<MaintenanceRequests mrequests={props.maintenancerequests} />
 			</div>
 
 			<div className='grid gap-4 md:grid-cols-4'>
