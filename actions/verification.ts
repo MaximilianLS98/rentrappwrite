@@ -22,4 +22,12 @@ const verifyAccount = async (userId: string, secret: string) => {
     return result;
 }
 
-export { sendVerificationEmail, verifyAccount };
+const sendPasswordResetEmail = async (email: string) => {
+    const session = (await cookies()).get('session')?.value as string;
+    const { account } = await createSessionClient(session);
+    const result = await account.createRecovery(email, 'http://localhost:3000/reset-password');
+    return result;
+}
+
+
+export { sendVerificationEmail, verifyAccount, sendPasswordResetEmail };
