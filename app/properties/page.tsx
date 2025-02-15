@@ -11,6 +11,7 @@ import {
 	TFetchMaintenanceRequests,
 	TMaintenanceRequest,
 } from '@/constants/types/maintenancerequests';
+import { Button } from '@/components/ui/button';
 
 type PropertyFetch = {
     total: number;
@@ -60,7 +61,7 @@ export default async function Page() {
 				<div>
 					<h1>No properties found</h1>
 					<Link href='/properties/new'>
-						<a className='btn btn-primary'>Create property</a>
+						<Button className='btn btn-primary'>Create property</Button>
 					</Link>
 				</div>
 			) : (
