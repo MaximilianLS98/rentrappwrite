@@ -12,9 +12,10 @@ import {
 } from '@/components/ui/card';
 import { sendPasswordResetEmail } from '@/actions/verification';
 
-export default function ForgotPasswordPage() {
-    'use server';
+export default async function ForgotPasswordPage() {
+    
     const initiatePasswordReset = async (formData: FormData) => {
+        'use server';
         const email = formData.get('email') as string;
         await sendPasswordResetEmail(email);
     }
