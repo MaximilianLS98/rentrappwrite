@@ -320,8 +320,8 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 				</DragDropContext>
 			</ErrorBoundary>
 			<div className='flex justify-between'>
-				<pre>{JSON.stringify(formattedRequests, null, 2)}</pre>
-				<pre>{JSON.stringify(formattedColumns, null, 2)}</pre>
+				{/* <pre>{JSON.stringify(formattedRequests, null, 2)}</pre> */}
+				{/* <pre>{JSON.stringify(formattedColumns, null, 2)}</pre> */}
 			</div>
 			<Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
 				<DialogContent>
