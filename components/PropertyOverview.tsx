@@ -35,15 +35,17 @@ export function PropertyOverview({
 
 	return (
 		<div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-			<Card className='relative'>
+			<Card className='relative group'>
 				<CardHeader className='pb-2'>
 					<div className='flex flex-row items-center justify-between spacy-y-0'>
-						<CardTitle className='text-sm font-medium'>Eiendommer</CardTitle>
+						<CardTitle className='text-2xl font-semibold'>Eiendommer</CardTitle>
 						<Building className='h-4 w-4 text-muted-foreground' />
 					</div>
 				</CardHeader>
 				<CardContent>
-					<div className='text-2xl font-bold mb-2'>{properties.total}</div>
+					<div className='text-2xl font-bold mb-2 group-hover:text-rentr-main'>
+						{properties.total}
+					</div>
 				</CardContent>
 				<CardFooter className='absolute bottom-1 left-1 p-4'>
 					<Link href='/properties/list'>
@@ -60,13 +62,15 @@ export function PropertyOverview({
 					<div className='text-2xl font-bold'>{units.total}</div>
 				</CardContent>
 			</Card> */}
-			<Card>
+			<Card className='group'>
 				<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-					<CardTitle className='text-sm font-medium'>Omsetning i måneden</CardTitle>
+					<CardTitle className='text-2xl font-semibold'>Omsetning i måneden</CardTitle>
 					<DollarSign className='h-4 w-4 text-muted-foreground' />
 				</CardHeader>
-				<CardContent>
-					<div className='text-2xl font-bold'>{formatCurrency(totalRent)}</div>
+				<CardContent className='group-hover:text-rentr-main'>
+					<div className='text-2xl font-bold'>
+						{formatCurrency(totalRent)}
+					</div>
 				</CardContent>
 			</Card>
 			<div className='md:col-span-2'>

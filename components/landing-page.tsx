@@ -26,7 +26,7 @@ export function LandingPageComponent() {
 								</p>
 							</div>
 							<div className='space-x-4'>
-								<Button className='bg-teal-500'>Kom igang</Button>
+								<Button className='bg-rentr-main'>Kom igang</Button>
 								<Button variant='outline'>Les mer</Button>
 							</div>
 						</div>
