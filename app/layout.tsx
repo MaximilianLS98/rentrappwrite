@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { ToasterSonner } from '@/components/ui/sonner';
 import Header from '@/components/header/Header';
 import { Suspense } from 'react';
+import VerifyAccountBanner from '@/components/auth/VerifyAccountBanner';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<CookiesProvider>
 					<ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+						<VerifyAccountBanner />
 						<Header />
 						{children}
 						<Toaster />
