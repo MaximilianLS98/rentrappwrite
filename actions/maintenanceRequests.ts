@@ -34,7 +34,6 @@ const getActiveMaintenanceRequests = async (sessionCookie: string) => {
     try {
 		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
 		const maintenanceRequests = await databases.listDocuments(databaseId, collectionId);
-        console.log(`Maintenance requests in server action: ${JSON.stringify(maintenanceRequests)}`);
 
 		// go through the maintenance requests and remove the closed ones that are older than 30 days
         const offsetHour = 1 * 60 * 60 * 1000;
