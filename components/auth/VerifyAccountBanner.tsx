@@ -6,6 +6,10 @@ import auth from "@/utils/auth";
 // This needs to be based on a form, and the form has an action that calls the sendVerificationEmail function
 export default async function VerifyAccountBanner() {
     const user = await auth.getUser();
+    if (!user) {
+        console.log('User is not logged in');
+        return null;
+    }
     if (user.emailVerification) {
         // console.log('User is already verified');
 		return null;
