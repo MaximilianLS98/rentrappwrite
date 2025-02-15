@@ -12,7 +12,7 @@ interface MaintenanceRequest {
 	unit: string;
 	description: string;
 	priority: 'Low' | 'Medium' | 'High';
-	status: 'Open' | 'In Progress' | 'Closed';
+	status: 'open' | 'inprogress' | 'closed' | 'backlog';
 }
 
 interface MaintenanceRequestsProps {
@@ -50,6 +50,8 @@ export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequests
 
   // requests is an array of request objects, each has a units key which is a single object with information about the unit, extract the title from the units object
   const requestTitles = requests.map((request) => request.unit);
+
+  const allRequestsNotClosed = mrequests.filter((request) => request.status !== 'closed');
   
 	return (
 		<Card className='relative'>
@@ -59,7 +61,7 @@ export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequests
 			<CardContent>
 				<div className='flex justify-between my-2 border-b pb-2'>
 					<h2 className='text-muted-foreground'>Aktive henvendelser:</h2>
-					<h2 className='text-muted-foreground'>{mrequests.length}</h2>
+					<h2 className='text-muted-foreground'>{allRequestsNotClosed.length}</h2>
 				</div>
 				<div className='space-y-4'>
 					{parseRequests(mrequests).map((request, index) => {
