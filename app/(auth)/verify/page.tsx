@@ -1,11 +1,11 @@
 import { verifyAccount } from "@/actions/verification";
 
 type Props = {
-    searchParams: {
+    searchParams: Promise<{
         secret: string,
         userId: string,
         expire: string,
-    }
+    }>
 }
 
 export default async function Page(props: Props) {
