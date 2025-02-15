@@ -7,20 +7,11 @@ import {
 	TMaintenanceRequest,
 } from '@/constants/types/maintenancerequests';
 
-interface MaintenanceRequest {
-	id: string;
-	unit: string;
-	description: string;
-	priority: 'Low' | 'Medium' | 'High';
-	status: 'open' | 'inprogress' | 'closed' | 'backlog';
-}
-
 interface MaintenanceRequestsProps {
-	requests: MaintenanceRequest[];
   mrequests: TMaintenanceRequest[];
 }
 
-export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequestsProps) {
+export function MaintenanceRequests({ mrequests }: MaintenanceRequestsProps) {
 
   const parseRequests = (requests: TMaintenanceRequest[]) => {
     // I want only critical and high priority requests, but if there are none, I want to show medium priority requests and so on, with max 5 requests and no entries with status 'closed'
@@ -48,9 +39,6 @@ export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequests
     }
   }
 
-  // requests is an array of request objects, each has a units key which is a single object with information about the unit, extract the title from the units object
-  const requestTitles = requests.map((request) => request.unit);
-
   const allRequestsNotClosed = mrequests.filter((request) => request.status !== 'closed');
   
 	return (
@@ -73,7 +61,7 @@ export function MaintenanceRequests({ requests, mrequests }: MaintenanceRequests
 								<div>
 									<div className='font-medium'>{request.title}</div>
 									<div className='text-sm text-muted-foreground'>
-										{requestTitles[index]}
+										{request.units.address}
 									</div>
 								</div>
                 <Badge
