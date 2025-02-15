@@ -85,12 +85,12 @@ const auth: Auth = {
 		'use server';
 		const cookieObj = await cookies();
 		const data = Object.fromEntries(formData);
-		const { email, password } = data;
-		console.log(`Trying to sign up with email: ${email}, password: ${password}`);
+		const { email, password, name } = data;
+		console.log(`Trying to sign up with email: ${email}, password: ${password} and name: ${name}`);
 		
 
 		const { account } = await createAdminClient();
-		const user = await account.create(ID.unique(), email, password);
+		const user = await account.create(ID.unique(), email, password, name);
 
 		// ? Should we log in the user after sign up automatically? Or should we redirect to login page? Maybe depends on confirmation email?
 		if (user.$id) {
