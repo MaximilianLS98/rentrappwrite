@@ -1,3 +1,5 @@
+import { TUnit } from './units';
+
 const propertyFetch: TPropertyFetch = {
 	total: 2,
 	documents: [
@@ -16,6 +18,7 @@ const propertyFetch: TPropertyFetch = {
 			],
 			$databaseId: 'rentrdb',
 			$collectionId: 'properties',
+            units: [],
 		},
 		{
 			name: 'Andre property',
@@ -32,6 +35,7 @@ const propertyFetch: TPropertyFetch = {
 			],
 			$databaseId: 'rentrdb',
 			$collectionId: 'properties',
+            units: [], 
 		},
 	],
 };
@@ -45,7 +49,7 @@ type TPropertyFetch = {
 type TProperty = {
     name: string;
     address: string;
-    type: string;
+    type: 'singlehome' | 'multiunit';
     owner: string;
     $id: string;
     $createdAt: string;
@@ -53,6 +57,7 @@ type TProperty = {
     $permissions: string[];
     $databaseId: string;
     $collectionId: string;
+    units: TUnit[] | null;
 };
 
 export type { TPropertyFetch, TProperty };
