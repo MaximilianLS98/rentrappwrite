@@ -1,8 +1,5 @@
-import { axiosInstance } from '@/utils/axios';
 import { cookies } from 'next/headers';
-import { Card, CardContent, CardFooter, CardHeader, CardDescription } from '@/components/ui/card';
 import Link from 'next/link';
-import { Suspense } from 'react';
 import Dashboard from '@/app/properties/dashboard';
 import { getAllProperties } from '@/actions/properties';
 import { getAllUnits } from '@/actions/units';
@@ -12,6 +9,7 @@ import {
 	TMaintenanceRequest,
 } from '@/constants/types/maintenancerequests';
 import { Button } from '@/components/ui/button';
+import auth from '@/utils/auth';
 
 type PropertyFetch = {
     total: number;
@@ -55,8 +53,11 @@ export default async function Page() {
     const properties = await getAllProperties(session) as PropertyFetch;
     const maintenancerequests = await getActiveMaintenanceRequests(session) as TFetchMaintenanceRequests;
 
+    const user = await auth.getUser();
+    const isAdmin = user.labels.includes('admin');
+
 	return (
-		<div className='container'>
+		<div className='container p-4'>
 			{properties.total === 0 ? (
 				<div>
 					<h1>No properties found</h1>
@@ -70,7 +71,8 @@ export default async function Page() {
                         units={units}
                         maintenancerequests={maintenancerequests.documents} />
 			)}
-            <pre>{JSON.stringify(maintenancerequests, null, 4)}</pre>
+            {/* <pre>{JSON.stringify(maintenancerequests, null, 4)}</pre> */}
+             {isAdmin ? <pre>{JSON.stringify(user, null, 4)}</pre> : null}
 		</div>
 	);
 }
