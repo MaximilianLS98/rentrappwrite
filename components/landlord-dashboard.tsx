@@ -30,6 +30,8 @@ import MessagesComponent from './landlordDashboard/Messages';
 import MarketTrends from './landlordDashboard/MarketTrends';
 import TenantRequests from './landlordDashboard/TenantRequests';
 import { useToast } from '@/hooks/use-toast';
+import { TMaintenanceRequest } from '@/constants/types/maintenancerequests';
+import { MaintenanceRequests } from './MaintenanceRequests';
 
 interface RentalUnit {
 	address: string;
@@ -97,9 +99,11 @@ const initialModules = [
 export function LandlordDashboardComponent({
 	rentalUnits,
 	user,
+	maintenanceRequests,
 }: {
 	rentalUnits?: any;
 	user?: any;
+	maintenanceRequests?: TMaintenanceRequest[];
 }) {
 	const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
 	const [modules, setModules] = useState<Modules>(
@@ -209,7 +213,8 @@ export function LandlordDashboardComponent({
 				case 'late-payments':
 					return <LatePayments key='late-payments' latePayments={latePayments} />;
 				case 'tenant-requests':
-					return <TenantRequests key='tenant-requests' />;
+					return <TenantRequests key='tenant-requests' mrequests={maintenanceRequests || []} />;
+					// return <MaintenanceRequests key='maintenance-requests' mrequests={maintenanceRequests} />;
 				case 'market-trends':
 					return <MarketTrends key='market-trends' />;
 				case 'messages':
