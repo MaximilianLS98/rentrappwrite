@@ -1,6 +1,6 @@
 'use server';
 import { createSessionClient } from '@/appwrite/config';
-import { ID } from 'node-appwrite';
+import { ID, Query } from 'node-appwrite';
 import auth from '@/utils/auth';
 
 // Page with server actions for the properties collection, fetching etc
@@ -18,62 +18,89 @@ const getDatabase = async (sessionCookie: string) => {
 	return { databases, databaseId, collectionId };
 };
 
-
 const getAllProperties = async (sessionCookie: string) => {
-    try {
-        const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
-        const properties = await databases.listDocuments(databaseId, collectionId);
-        return properties;
-    } catch (error) {
-        console.error(error);
-        return { error };
-    }
-}
+	try {
+		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
+		const properties = await databases.listDocuments(databaseId, collectionId);
+		return properties;
+	} catch (error) {
+		console.error(error);
+		return { error };
+	}
+};
+
+const getAllPropertyNames = async (sessionCookie: string) => {
+    console.log(`Trying to get all property names`);
+	try {
+		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
+		const properties = await databases.listDocuments(databaseId, collectionId, [
+			Query.select(['name']),
+            Query.limit(100),
+		]);
+        console.log(`Property names found: ${properties}`);
+		return properties;
+	} catch (error) {
+		console.error(error);
+		return { error };
+	}
+};
 
 const getPropertyById = async (sessionCookie: string, id: string) => {
-    try {
-        const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
-        const property = await databases.getDocument(databaseId, collectionId, id);
-        return property;
-    } catch (error) {
-        console.error(error);
-        return { error };
-    }
-}
+	try {
+		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
+		const property = await databases.getDocument(databaseId, collectionId, id);
+		return property;
+	} catch (error) {
+		console.error(error);
+		return { error };
+	}
+};
 
 const createProperty = async (sessionCookie: string, propertyData: any) => {
-    const userId = (await auth.getUser()).$id;
-    propertyData.owner = userId;
-    try {
-        const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
-        const property = await databases.createDocument(databaseId, collectionId, ID.unique(), propertyData);
-        return property;
-    } catch (error) {
-        console.error(error);
-        return { error };
-    }
-}
+	const userId = (await auth.getUser()).$id;
+	propertyData.owner = userId;
+	try {
+		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
+		const property = await databases.createDocument(
+			databaseId,
+			collectionId,
+			ID.unique(),
+			propertyData,
+		);
+		return property;
+	} catch (error) {
+		console.error(error);
+		return { error };
+	}
+};
 
 const updatePropertyById = async (sessionCookie: string, id: string, propertyData: any) => {
-    try {
-        const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
-        const property = await databases.updateDocument(databaseId, collectionId, id, propertyData);
-        return property;
-    } catch (error) {
-        console.error(error);
-        return { error };
-    }
-}
+	try {
+		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
+		const property = await databases.updateDocument(databaseId, collectionId, id, propertyData);
+		return property;
+	} catch (error) {
+		console.error(error);
+		return { error };
+	}
+};
 
 const deletePropertyById = async (sessionCookie: string, id: string) => {
-    try {
-        const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
-        await databases.deleteDocument(databaseId, collectionId, id);
-        return { message: 'Property deleted' };
-    } catch (error) {
-        console.error(error);
-        return { error };
-    }
-}
+	try {
+		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
+		await databases.deleteDocument(databaseId, collectionId, id);
+		return { message: 'Property deleted' };
+	} catch (error) {
+		console.error(error);
+		return { error };
+	}
+};
 
-export { getAllProperties, getPropertyById, createProperty, updatePropertyById, deletePropertyById };
+export {
+	getAllProperties,
+	getPropertyById,
+	createProperty,
+	updatePropertyById,
+	deletePropertyById,
+    getAllPropertyNames
+};
