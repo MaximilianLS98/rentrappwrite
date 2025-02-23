@@ -5,6 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Trash2 } from 'lucide-react';
 
+
+// ! - ONLY WORKS FOR DELETING UNITS AS OF NOW
+// TODO - Refactor so it can delete from any collection
 export default function DeleteButton(props: { id: string, redirect?: boolean, setUnits?: any }) {
     const router = useRouter();
     const { toast } = useToast();
@@ -43,8 +46,9 @@ export default function DeleteButton(props: { id: string, redirect?: boolean, se
 		<>
 			{/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
 			<Button className='w-full rounded' onClick={(e) => handleDelete(e)} variant={'destructive'}>
-                <Trash2 size={16} className='mr-1' />
-				Delete
+                {/* <Trash2 size={16} className='mr-1' /> */}
+                <Trash2 size={16} className='' />
+				{/* Slett */}
 			</Button>
 		</>
 	);
