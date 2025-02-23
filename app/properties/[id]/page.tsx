@@ -2,6 +2,8 @@ import { axiosInstance } from '@/utils/axios';
 import { cookies } from 'next/headers';
 import { Card, CardContent, CardFooter, CardHeader, CardDescription } from '@/components/ui/card';
 import { getPropertyById } from '@/actions/properties';
+import MultiUnitPropertyManagement from '../MultiView';
+import SingleUnitPropertyManagement from '../SinlgeView';
 
 type Property = {
 	name: string;
@@ -32,7 +34,7 @@ export default async function Page(props:any) {
                 </CardContent>
                 <CardFooter>{property.type}</CardFooter>
             </Card>
-			<pre>{JSON.stringify(property, null, 2)}</pre>
+			{/* <pre>{JSON.stringify(property, null, 2)}</pre> */}
 		</div>
 	);
 }
