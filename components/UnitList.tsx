@@ -1,20 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-
-interface Unit {
-	id: string;
-	name: string;
-	type: 'Single' | 'Multi';
-	totalUnits?: number;
-	occupiedUnits?: number;
-	status: 'Occupied' | 'Vacant' | 'Partially Occupied' | 'Maintenance';
-	rent: number;
-}
-
-interface UnitListProps {
-  units: Unit[]
-}
+import { currencyFormatter } from "@/utils/helpers"
+import { FetchUnit, TUnit } from "@/constants/types/units"
 
 function getOccupancy(unit: TUnit) {
   if (unit.status === 'Occupied') {
@@ -26,38 +14,13 @@ function getOccupancy(unit: TUnit) {
   }
 }
 
-type TProps = {
-    units: {
-        documents: TUnit[]
-        total: number;
-    }
-};
-
-type TUnit = {
-  title: string;
-  squaremeters: number;
-  address: string;
-  monthlyrent: number;
-  deposit: number;
-  housingtype: string;
-  description: string;
-  rating: number;
-  owner: string;  
-  status: string;
-  tenant: string;
-  bedrooms: number;
-  bathrooms: number;
-  $id: string;
-  $createdAt: string;
-  $updatedAt: string;
-  $permissions: string[];
-  $databaseId: string;
-  $collectionId: string;
-};
+type Props = {
+  units: FetchUnit;
+}
 
 // export function UnitList({ units }: UnitListProps) {
-export function UnitList(props:TProps) {
-  const units = props.units.documents;
+export function UnitList({ units }: Props) {
+  // const units = props.units.documents;
   return (
     <Card className="col-span-3">
       <CardHeader>
@@ -70,34 +33,30 @@ export function UnitList(props:TProps) {
               <TableHead>Navn</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead>Utleid</TableHead>
+              <TableHead>Leietaker</TableHead>
               <TableHead className="text-right">Leie</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {units.map((unit) => (
+            {units.documents.map((unit) => (
               <TableRow key={unit.$id}>
                 <TableCell className="font-medium">{unit.title}</TableCell>
                 <TableCell>{unit.housingtype}</TableCell>
                 <TableCell>
                   <Badge
                     variant={
-                      unit.status === "Occupied"
+                      unit.status === "vacant"
                         ? "default"
-                        : unit.status === "Vacant"
-                          ? "secondary"
-                          : unit.status === "Partially Occupied"
-                            ? "outline"
-                            : "destructive"
+                        : "secondary"
                     }
                   >
                     {unit.status}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {getOccupancy(unit)}
+                  {unit.tenant}
                 </TableCell>
-                <TableCell className="text-right">{unit.monthlyrent}NOK</TableCell>
+                <TableCell className="text-right">{currencyFormatter(unit.monthlyrent, false)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
