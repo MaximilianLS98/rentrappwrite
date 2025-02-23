@@ -3,6 +3,7 @@ import { Building, Home, DollarSign, Users } from 'lucide-react';
 import KeyMetrics from './landlordDashboard/KeyMetrics';
 import { Button } from './ui/button';
 import Link from 'next/link';
+import { totalRentProperty, totalRentOccupied, currencyFormatter } from '@/utils/helpers';
 
 interface PropertyOverviewProps {
 	totalProperties: number;
@@ -21,17 +22,10 @@ export function PropertyOverview({
 	properties,
 	units,
 }: PropertyOverviewProps) {
-	const totalRent = units.documents.reduce((acc: number, unit: any) => {
-		return acc + unit.monthlyrent;
-	}, 0);
 
 	const totalTenantsCounted = units.documents.filter(
 		(unit: any) => unit.status === 'Occupied',
 	).length;
-
-	const formatCurrency = (value: number) => {
-		return new Intl.NumberFormat('nb-NO', { style: 'currency', currency: 'NOK' }).format(value);
-	};
 
 	return (
 		<div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
@@ -69,7 +63,7 @@ export function PropertyOverview({
 				</CardHeader>
 				<CardContent className='group-hover:text-rentr-main'>
 					<div className='text-2xl font-bold'>
-						{formatCurrency(totalRent)}
+						{currencyFormatter(totalRentOccupied(units.documents), false)}
 					</div>
 				</CardContent>
 			</Card>

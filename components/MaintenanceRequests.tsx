@@ -6,6 +6,8 @@ import {
 	TFetchMaintenanceRequests,
 	TMaintenanceRequest,
 } from '@/constants/types/maintenancerequests';
+import { translateMaintenanceStatus, translateMaintenancePriority } from '@/utils/helpers';
+
 
 interface MaintenanceRequestsProps {
   mrequests: TMaintenanceRequest[];
@@ -15,7 +17,7 @@ export function MaintenanceRequests({ mrequests }: MaintenanceRequestsProps) {
 
   const parseRequests = (requests: TMaintenanceRequest[]) => {
     // I want only critical and high priority requests, but if there are none, I want to show medium priority requests and so on, with max 5 requests and no entries with status 'closed'
-    const requestsFiltered = requests.filter((request) => request.status !== 'closed');
+    const requestsFiltered = requests.filter((request) => request.status !== 'closed').filter((request) => request.units !== null);
     const criticalRequests = requestsFiltered.filter((request) => request.priority === 'critical');
     const highRequests = requestsFiltered.filter((request) => request.priority === 'high');
     const mediumRequests = requestsFiltered.filter((request) => request.priority === 'medium');
@@ -24,21 +26,7 @@ export function MaintenanceRequests({ mrequests }: MaintenanceRequestsProps) {
     return parsedRequests;
   }
 
-  const translatedPriority = (priority: string) => {
-    switch (priority) {
-      case 'low':
-      return 'Lav';
-      case 'medium':
-      return 'Middels';
-      case 'high':
-      return 'Høy';
-      case 'critical':
-      return 'Kritisk';
-      default:
-      return priority;
-    }
-  }
-
+  // Filter out the requests that doesnt have a unit associated with them and the requests that are closed
   const allRequestsNotClosed = mrequests.filter((request) => request.status !== 'closed');
   
 	return (
@@ -78,7 +66,7 @@ export function MaintenanceRequests({ mrequests }: MaintenanceRequestsProps) {
                       : 'bg-gray-500'
                   }
                 >
-                  {translatedPriority(request.priority)}
+                  {translateMaintenancePriority(request.priority)}
                 </Badge>
 								{/* <Badge
                   className={
