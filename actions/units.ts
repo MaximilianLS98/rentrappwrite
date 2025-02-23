@@ -1,6 +1,6 @@
 'use server';
 import { createSessionClient } from "@/appwrite/config";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 
 // Page with server actions for the units collection, fetching etc
 // Trying server actions to have something work well in client components as well as server components
@@ -22,6 +22,20 @@ const getAllUnits = async (sessionCookie: string) => {
     try {
         const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
         const units = await databases.listDocuments(databaseId, collectionId);
+        return units;
+    } catch (error) {
+        console.error(error);
+        return { error };
+    }
+}
+
+const getAllUnassignedUnits = async (sessionCookie: string) => {
+    // a unit is assigned if the properties field has something in it, and is not an empty array or null
+    try {
+        const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
+        const units = await databases.listDocuments(databaseId, collectionId, [
+            Query.isNull('properties'),
+        ]);
         return units;
     } catch (error) {
         console.error(error);
@@ -75,4 +89,4 @@ const deleteUnitById = async (sessionCookie: string, id: string) => {
 }
 
 
-export { getAllUnits, getUnitById, createUnit, updateUnitById, deleteUnitById };
+export { getAllUnits, getAllUnassignedUnits, getUnitById, createUnit, updateUnitById, deleteUnitById };
