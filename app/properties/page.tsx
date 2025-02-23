@@ -1,60 +1,31 @@
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import Dashboard from '@/app/properties/dashboard';
-import { getAllProperties } from '@/actions/properties';
+import { getAllProperties, getAllPropertyNames } from '@/actions/properties';
 import { getAllUnits } from '@/actions/units';
-import { getAllMaintenanceRequests, getActiveMaintenanceRequests } from '@/actions/maintenanceRequests';
+import { getActiveMaintenanceRequests } from '@/actions/maintenanceRequests';
 import {
 	TFetchMaintenanceRequests,
 	TMaintenanceRequest,
 } from '@/constants/types/maintenancerequests';
 import { Button } from '@/components/ui/button';
 import auth from '@/utils/auth';
-
-type PropertyFetch = {
-    total: number;
-    documents: Property[];
-}
-
-type Property = {
-	name: string;
-	address: string;
-	type: string;
-	owner: string;
-	$id: string;
-	$createdAt: string;
-	$updatedAt: string;
-	$permissions: string[];
-	$databaseId: string;
-	$collectionId: string;
-};
-
-type UnitFetch = {
-    total: number;
-    documents: Unit[];
-}
-
-type Unit = {
-    name: string;
-    type: string;
-    owner: string;
-    $id: string;
-    $createdAt: string;
-    $updatedAt: string;
-    $permissions: string[];
-    $databaseId: string;
-    $collectionId: string;
-};
+import { FetchUnit } from '@/constants/types/units';
+import { TPropertyFetch } from '@/constants/types/properties';
+import SingleUnitPropertyManagement from './SinlgeView';
+import MultiUnitPropertyManagement from './MultiView';
 
 export default async function Page() {
 	const session = (await cookies()).get('session')?.value as string;
 
-    const units = await getAllUnits(session) as UnitFetch;
-    const properties = await getAllProperties(session) as PropertyFetch;
-    const maintenancerequests = await getActiveMaintenanceRequests(session) as TFetchMaintenanceRequests;
+	const units = (await getAllUnits(session)) as FetchUnit;
+	const properties = (await getAllProperties(session)) as TPropertyFetch;
+	const maintenancerequests = (await getActiveMaintenanceRequests(
+		session,
+	)) as TFetchMaintenanceRequests;
 
-    const user = await auth.getUser();
-    const isAdmin = user.labels.includes('admin');
+	const user = await auth.getUser();
+	const isAdmin = user.labels.includes('admin');
 
 	return (
 		<div className='container p-4'>
@@ -66,13 +37,23 @@ export default async function Page() {
 					</Link>
 				</div>
 			) : (
-				<Dashboard
-                        properties={properties}
-                        units={units}
-                        maintenancerequests={maintenancerequests.documents} />
+				<div>
+					<Dashboard
+						properties={properties}
+						units={units}
+						maintenancerequests={maintenancerequests.documents}
+					/>
+					{properties.documents.map((property) => (
+						<MultiUnitPropertyManagement
+							key={property.$id}
+							property={property}
+							maintenancerequests={maintenancerequests}
+						/>
+					))}
+				</div>
 			)}
-            {/* <pre>{JSON.stringify(maintenancerequests, null, 4)}</pre> */}
-             {isAdmin ? <pre>{JSON.stringify(user, null, 4)}</pre> : null}
+			{/* <pre>{JSON.stringify(maintenancerequests, null, 4)}</pre> */}
+			{isAdmin ? <pre>{JSON.stringify(user, null, 4)}</pre> : null}
 		</div>
 	);
 }
