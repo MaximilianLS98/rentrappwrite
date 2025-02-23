@@ -12,7 +12,7 @@ import {
 	TFetchMaintenanceRequests,
 	TMaintenanceRequest,
 } from '@/constants/types/maintenancerequests';
-import auth from '@/utils/auth';
+import { FetchUnit } from '@/constants/types/units';
 
 // Mock data
 const propertyData = {
@@ -45,7 +45,7 @@ const revenueData = [
 
 type Props = {
   properties: any;
-  units: any;
+  units: FetchUnit;
   maintenancerequests: TMaintenanceRequest[];
 }
 
@@ -68,6 +68,9 @@ export default function Dashboard(props: Props) {
 			<div className='flex justify-between items-center'>
 				<h1 className='text-3xl font-bold'>Dashboard</h1>
 				<div className='space-x-2'>
+					<Link href='/leases/create'>
+						<Button variant={'rentr'}>Ny leiekontrakt</Button>
+					</Link>
 					<Link href='/properties/create'>
 						<Button variant={'outline'}>Legg til eiendom</Button>
 					</Link>
