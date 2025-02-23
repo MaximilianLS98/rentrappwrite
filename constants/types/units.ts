@@ -1,3 +1,5 @@
+import { TProperty } from "./properties";
+
 type FetchUnit = {
     total: number;
     documents: TUnit[];
@@ -48,7 +50,7 @@ type TUnit = {
     squaremeters: number;
     address: string;
     monthlyrent: number;
-    deposit: number;
+    deposit: number | null;
     housingtype: string;
     description: string;
     rating: number;
@@ -61,7 +63,7 @@ type TUnit = {
     $createdAt: string;
     $updatedAt: string;
     $permissions: string[];
-    properties: [] | null;
+    properties: TProperty | null;
     $databaseId: string;
     $collectionId: string;
 }
