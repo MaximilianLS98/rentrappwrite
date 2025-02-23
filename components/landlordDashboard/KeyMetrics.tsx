@@ -1,19 +1,12 @@
 import { BarChart } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { currencyFormatter } from "@/utils/helpers";
-
-type unit = {
-	title: string;
-	address: string;
-	monthlyrent: number;
-	tenant: string;
-	status: 'Occupied' | 'Vacant';
-}
+import { TUnit } from "@/constants/types/units";
 
 export default function KeyMetrics({ units } : { units: any }) {
-	const rentalRate = (units.filter((unit: unit) => unit.status === 'Occupied').length / units.length * 100).toFixed(1);
-	const vacancyRate = (units.filter((unit: unit) => unit.status === 'Vacant').length / units.length * 100).toFixed(1);
-	const avgRent = (units.reduce((acc: number, unit: unit) => acc + unit.monthlyrent, 0) / units.length * 1).toFixed(0) as unknown as number;
+	const rentalRate = (units.filter((unit: TUnit) => unit.status === 'occupied').length / units.length * 100).toFixed(1);
+	const vacancyRate = (units.filter((unit: TUnit) => unit.status === 'vacant').length / units.length * 100).toFixed(1);
+	const avgRent = (units.reduce((acc: number, unit: TUnit) => acc + unit.monthlyrent, 0) / units.length * 1).toFixed(0) as unknown as number;
 	const properties = units.length;
     return (
 		<Card key='key-metrics' className='h-full overflow-clip'>
