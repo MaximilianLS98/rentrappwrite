@@ -71,13 +71,7 @@ export function UpdateRentalUnitComponent(props: any) {
 		const formData = new FormData();
 
 		Object.entries(unit).forEach(([key, value]) => {
-			console.log(`Key: ${key}, Value: ${value} in create-rental-unit handleSubmit`);
 			formData.append(key, value.toString());
-			console.log(
-				`Full formData in create-rental-unit: ${JSON.stringify(
-					formData.entries(),
-				)} after appending key value pair`,
-			);
 		});
 
 		// images.forEach((image, index) => {
