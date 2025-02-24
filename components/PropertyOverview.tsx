@@ -63,7 +63,7 @@ export function PropertyOverview({
 				</CardHeader>
 				<CardContent className='group-hover:text-rentr-main'>
 					<div className='text-2xl font-bold'>
-						{currencyFormatter(totalRentOccupied(units.documents), false)}
+						{currencyFormatter(totalRentOccupied(units.documents), false)} /{' '} {currencyFormatter(totalRentProperty(units.documents), false)}
 					</div>
 				</CardContent>
 			</Card>
