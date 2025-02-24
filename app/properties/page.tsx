@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import Dashboard from '@/app/properties/dashboard';
-import { getAllProperties, getAllPropertyNames } from '@/actions/properties';
+import { getAllProperties } from '@/actions/properties';
 import { getAllUnits } from '@/actions/units';
 import { getActiveMaintenanceRequests } from '@/actions/maintenanceRequests';
 import {
@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import auth from '@/utils/auth';
 import { FetchUnit } from '@/constants/types/units';
 import { TPropertyFetch } from '@/constants/types/properties';
-import SingleUnitPropertyManagement from './SinlgeView';
 import MultiUnitPropertyManagement from './MultiView';
 
 export default async function Page() {
