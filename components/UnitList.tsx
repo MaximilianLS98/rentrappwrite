@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { currencyFormatter } from "@/utils/helpers"
+import { currencyFormatter, translateOccupancyStatus } from "@/utils/helpers"
 import { FetchUnit, TUnit } from "@/constants/types/units"
 
 function getOccupancy(unit: TUnit) {
@@ -50,7 +50,7 @@ export function UnitList({ units }: Props) {
                         : "secondary"
                     }
                   >
-                    {unit.status}
+                    {translateOccupancyStatus(unit.status)}
                   </Badge>
                 </TableCell>
                 <TableCell>
