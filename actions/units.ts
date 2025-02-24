@@ -1,6 +1,7 @@
 'use server';
 import { createSessionClient } from "@/appwrite/config";
 import { ID, Query } from "node-appwrite";
+import auth from "@/utils/auth";
 
 // Page with server actions for the units collection, fetching etc
 // Trying server actions to have something work well in client components as well as server components
@@ -56,6 +57,9 @@ const getUnitById = async (sessionCookie: string, id: string) => {
 }
 
 const createUnit = async (sessionCookie: string, unitData: any) => {
+    const user = await auth.getUser();
+    const userId = user.$id;
+    unitData.owner = userId;
     try {
         const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
         const unit = await databases.createDocument(databaseId, collectionId, ID.unique(), unitData);
