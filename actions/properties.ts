@@ -29,12 +29,12 @@ const getAllProperties = async (sessionCookie: string) => {
 	}
 };
 
-const getAllPropertyNames = async (sessionCookie: string) => {
+const getAllPropertyNamesAndIds = async (sessionCookie: string) => {
     console.log(`Trying to get all property names`);
 	try {
 		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
 		const properties = await databases.listDocuments(databaseId, collectionId, [
-			Query.select(['name']),
+			Query.select(['name', '$id']),
             Query.limit(100),
 		]);
         console.log(`Property names found: ${properties}`);
@@ -102,5 +102,5 @@ export {
 	createProperty,
 	updatePropertyById,
 	deletePropertyById,
-    getAllPropertyNames
+    getAllPropertyNamesAndIds
 };
