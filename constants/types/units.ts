@@ -51,21 +51,22 @@ type TUnit = {
     address: string;
     monthlyrent: number;
     deposit: number | null;
-    housingtype: string;
+    housingtype?: string;
     description: string;
-    rating: number;
+    rating?: number;
     owner: string;
     status: string;
     tenant: string;
-    bedrooms: number;
-    bathrooms: number;
+    bedrooms?: number;
+    bathrooms?: number;
     $id: string;
     $createdAt: string;
     $updatedAt: string;
     $permissions: string[];
-    properties: TProperty | null;
+    properties: TProperty | null | string;
     $databaseId: string;
     $collectionId: string;
+    unitNumber?: string;
 }
 
 export type { TUnit, FetchUnit };
