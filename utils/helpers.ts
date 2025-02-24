@@ -56,3 +56,14 @@ export const translateMaintenancePriority = (priority: string) => {
             return priority;
     }
 }
+
+export const translateOccupancyStatus = (status: string) => {
+    switch (status) {
+        case 'occupied':
+            return 'Utleid';
+        case 'vacant':
+            return 'Ledig';
+        default:
+            return status;
+    }
+}
