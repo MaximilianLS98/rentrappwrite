@@ -26,6 +26,7 @@ import {
 	occupancyRateCalc,
 	translateMaintenancePriority,
 	translateMaintenanceStatus,
+	translateOccupancyStatus
 } from '@/utils/helpers';
 import Link from 'next/link';
 
@@ -231,7 +232,7 @@ export default function MultiUnitPropertyManagement(props: {
 																	? 'default'
 																	: 'destructive'
 															}>
-															{unit.status}
+															{translateOccupancyStatus(unit.status)}
 														</Badge>
 													</TableCell>
 													<TableCell>01.01.2025</TableCell>
