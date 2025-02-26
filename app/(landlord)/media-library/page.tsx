@@ -1,11 +1,11 @@
-import { axiosInstanceClient } from "@/utils/clientAxios"
 import { cookies } from "next/headers"
 import AppwriteImage from "@/components/appwriteImage"
 import { getImageIdList } from "@/actions/images";
 
 
 export default async function() { 
-    const images = await getImageIdList();
+    const sessionCookie = (await cookies()).get('session')?.value ?? '';
+    const images = await getImageIdList(sessionCookie);
 
     return (
         <main className="container m-auto">

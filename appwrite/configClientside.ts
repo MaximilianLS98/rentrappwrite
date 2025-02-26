@@ -1,11 +1,14 @@
 import { Client, Databases, Account, Storage } from 'appwrite';
 
+
+
 const createSessionClient = (session: any) => {
 	const client = new Client()
 		.setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || '')
 		.setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || '')
 
         if (session) {
+            console.log(`Setting session in createSessionClient clientside configClientside.ts`);
             client.setSession(session);
         }
 

@@ -4,7 +4,6 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { Line, LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 const IncomeGraph = (data: any) => {
-	console.log(`Data in IncomeGraph: ${JSON.stringify(data)}`);
 
 	return (
 		<>

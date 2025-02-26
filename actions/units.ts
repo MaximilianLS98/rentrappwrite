@@ -1,6 +1,7 @@
 'use server';
 import { createSessionClient } from "@/appwrite/config";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
+import auth from "@/utils/auth";
 
 // Page with server actions for the units collection, fetching etc
 // Trying server actions to have something work well in client components as well as server components
@@ -29,6 +30,20 @@ const getAllUnits = async (sessionCookie: string) => {
     }
 }
 
+const getAllUnassignedUnits = async (sessionCookie: string) => {
+    // a unit is assigned if the properties field has something in it, and is not an empty array or null
+    try {
+        const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
+        const units = await databases.listDocuments(databaseId, collectionId, [
+            Query.isNull('properties'),
+        ]);
+        return units;
+    } catch (error) {
+        console.error(error);
+        return { error };
+    }
+}
+
 const getUnitById = async (sessionCookie: string, id: string) => {
     try {
         console.log(`Trying to get unit with id: ${id}, message from units.ts`);
@@ -42,6 +57,9 @@ const getUnitById = async (sessionCookie: string, id: string) => {
 }
 
 const createUnit = async (sessionCookie: string, unitData: any) => {
+    const user = await auth.getUser();
+    const userId = user.$id;
+    unitData.owner = userId;
     try {
         const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
         const unit = await databases.createDocument(databaseId, collectionId, ID.unique(), unitData);
@@ -75,4 +93,4 @@ const deleteUnitById = async (sessionCookie: string, id: string) => {
 }
 
 
-export { getAllUnits, getUnitById, createUnit, updateUnitById, deleteUnitById };
+export { getAllUnits, getAllUnassignedUnits, getUnitById, createUnit, updateUnitById, deleteUnitById };

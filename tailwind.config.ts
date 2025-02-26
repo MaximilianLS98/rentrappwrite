@@ -65,6 +65,14 @@ const config: Config = {
 					'4': 'hsl(var(--chart-4))',
 					'5': 'hsl(var(--chart-5))',
 				},
+				rentr: {
+					main: 'var(--rentr-main)',
+					secondary: 'var(--rentr-blue-dark)',
+					tertiary: 'var(--rentr-red-warning)',
+					lightblue: 'var(--rentr-blue-light)',
+					darkblue: 'var(--rentr-blue-dark)',
+					red: 'var(--rentr-red-warning)',
+				}
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

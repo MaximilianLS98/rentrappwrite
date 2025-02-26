@@ -24,6 +24,7 @@ interface TrandomData {
 	status: string;
 	bedrooms?: number;
 	bathrooms?: number;
+	properties: string[];
 }
 
 export default function AddRandomUnit(props: props) {
@@ -44,9 +45,9 @@ export default function AddRandomUnit(props: props) {
 	const getVacantOrOccupied = () => {
 		const random = Math.floor(Math.random() * 2);
 		if (random === 0) {
-			return 'Vacant';
+			return 'vacant';
 		} else {
-			return 'Occupied';
+			return 'occupied';
 		}
 	}
 
@@ -62,7 +63,7 @@ export default function AddRandomUnit(props: props) {
 				const parsedObject: TrandomData = {
 					title: data.data.results[0].location.city,
 					address: data.data.results[0].location.street.name,
-					monthlyrent: Math.floor(Math.random() * 1000),
+					monthlyrent: Math.floor(Math.random() * 2000),
 					deposit: Math.floor(Math.random() * 1000),
 					housingtype: data.data.results[0].gender === 'female' ? 'apartment' : 'house',
 					description: 'Random Description',
@@ -72,6 +73,7 @@ export default function AddRandomUnit(props: props) {
 					status: getVacantOrOccupied(),
 					bathrooms: Math.floor(Math.random() * 5),
 					bedrooms: Math.floor(Math.random() * 5),
+					properties: ['67ba2056001b263152bd'], // Id of test property
 				};
 				return parsedObject;
 			};
@@ -110,5 +112,5 @@ export default function AddRandomUnit(props: props) {
 		}
 	};
 
-	return <Button className='rounded' onClick={() => handleClick()}>Add Random Unit</Button>;
+	return <Button className='rounded' variant={'rentr'} onClick={() => handleClick()}>Add Random Unit</Button>;
 }

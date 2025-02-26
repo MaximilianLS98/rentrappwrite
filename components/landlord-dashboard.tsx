@@ -8,7 +8,6 @@ import 'react-resizable/css/styles.css';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { ClipboardList, Settings, TrendingUp } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import {
 	Sheet,
 	SheetContent,
@@ -17,7 +16,6 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from '@/components/ui/sheet';
-import { Line, LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 // import { getCurrentUser, getUserLayout, saveUserLayout } from '@/appwrite/userLayoutPrefs';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -29,12 +27,11 @@ import RecentActivity from './landlordDashboard/RecentActivity';
 import ImportantDates from './landlordDashboard/ImportDates';
 import MediaLibrary from './landlordDashboard/MediaLibrary';
 import MessagesComponent from './landlordDashboard/Messages';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
-import { Card, CardHeader, CardTitle, CardContent } from './ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from './ui/chart';
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from './ui/table';
+import MarketTrends from './landlordDashboard/MarketTrends';
+import TenantRequests from './landlordDashboard/TenantRequests';
 import { useToast } from '@/hooks/use-toast';
-import Link from 'next/link';
+import { TMaintenanceRequest } from '@/constants/types/maintenancerequests';
+import { MaintenanceRequests } from './MaintenanceRequests';
 
 interface RentalUnit {
 	address: string;
@@ -85,25 +82,7 @@ const latePayments = [
 		interest: 16.5,
 	},
 ];
-const tenantRequests = [
-  { id: 1, tenant: 'John Smith', property: '123 Main St', type: 'Maintenance', status: 'Ny', date: '2023-06-15' },
-  { id: 2, tenant: 'Jane Doe', property: '456 Elm St', type: 'Complaint', status: 'Pågår', date: '2023-06-14' },
-  { id: 3, tenant: 'Bob Johnson', property: '789 Oak St', type: 'Inquiry', status: 'Løst', date: '2023-06-13' },
-]
-// const rentalUnits = [
-// 	{ address: '123 Main St', status: 'Occupied', rent: 1200, tenant: 'John Smith' },
-// 	{ address: '456 Elm St', status: 'Vacant', rent: 1100, tenant: null },
-// 	{ address: '789 Oak St', status: 'Occupied', rent: 1300, tenant: 'Jane Doe' },
-// 	{ address: '321 Pine St', status: 'Occupied', rent: 1150, tenant: 'Bob Johnson' },
-// ];
-const marketTrends = [
-	{ month: 'Jan', avgPrice: 1200, demand: 95 },
-	{ month: 'Feb', avgPrice: 1250, demand: 98 },
-	{ month: 'Mar', avgPrice: 1300, demand: 102 },
-	{ month: 'Apr', avgPrice: 1280, demand: 100 },
-	{ month: 'May', avgPrice: 1320, demand: 105 },
-	{ month: 'Jun', avgPrice: 1350, demand: 108 },
-];
+
 const initialModules = [
 	{ id: 'rental-units', label: 'Rental Units', enabled: true, w: 1, h: 2 },
 	{ id: 'projected-income', label: 'Projected Income', enabled: true, w: 1, h: 2 },
@@ -117,9 +96,21 @@ const initialModules = [
 	{ id: 'messages', label: 'Messages', enabled: true },
 ];
 
-export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?: any, user?: any }) {
+export function LandlordDashboardComponent({
+	rentalUnits,
+	user,
+	maintenanceRequests,
+}: {
+	rentalUnits?: any;
+	user?: any;
+	maintenanceRequests?: TMaintenanceRequest[];
+}) {
 	const ResponsiveGridLayout = useMemo(() => WidthProvider(Responsive), []);
-	const [modules, setModules] = useState<Modules>(localStorage.getItem('modules') ? JSON.parse(localStorage.getItem('modules') as string) : initialModules);
+	const [modules, setModules] = useState<Modules>(
+		localStorage.getItem('modules')
+			? JSON.parse(localStorage.getItem('modules') as string)
+			: initialModules,
+	);
 	const [isSheetOpen, setIsSheetOpen] = useState(false);
 	const [hasRendered, setHasRendered] = useState(false);
 	const { toast } = useToast();
@@ -136,29 +127,33 @@ export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?
 				// minH: 2
 			})),
 	};
-	const [layouts, setLayouts] = useState<Layouts>(localStorage.getItem('layout') ? JSON.parse(localStorage.getItem('layout') as string) : defaultLayout);
+	const [layouts, setLayouts] = useState<Layouts>(
+		localStorage.getItem('layout')
+			? JSON.parse(localStorage.getItem('layout') as string)
+			: defaultLayout,
+	);
 
 	const updateLayout = async (layout: Layouts, modules: Module[]) => {
-    console.log(`Hitting updateLayout in the LandlordDashboardComponent`);
-	try {
-		await axiosInstanceClient.post('api/userprefs/layout', {
-			data: { layout, modules },
-		});
-		// Also adding the layout to the localstorage for quick retrieval on page refresh
-		localStorage.setItem('layout', JSON.stringify(layout));
-		localStorage.setItem('modules', JSON.stringify(modules));
-		toast({
-			title: 'Success',
-			description: 'Layout updated successfully',
-		});
-	} catch (error) {
-		console.error(`Error updating layout: ${error}`);
-		toast({
-			title: 'Error',
-			description: 'Failed to update layout',
-			variant: 'destructive',
-		})
-	}
+		console.log(`Hitting updateLayout in the LandlordDashboardComponent`);
+		try {
+			await axiosInstanceClient.post('api/userprefs/layout', {
+				data: { layout, modules },
+			});
+			// Also adding the layout to the localstorage for quick retrieval on page refresh
+			localStorage.setItem('layout', JSON.stringify(layout));
+			localStorage.setItem('modules', JSON.stringify(modules));
+			toast({
+				title: 'Success',
+				description: 'Layout updated successfully',
+			});
+		} catch (error) {
+			console.error(`Error updating layout: ${error}`);
+			toast({
+				title: 'Error',
+				description: 'Failed to update layout',
+				variant: 'destructive',
+			});
+		}
 	};
 	const getLayout = async () => {
 		const response = await axiosInstanceClient.get('api/userprefs/layout');
@@ -169,10 +164,10 @@ export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?
 		(async () => {
 			const layoutAndModules = await getLayout();
 			// console.log(`Layout and modules: ${JSON.stringify(layoutAndModules, null, 2)}`);
-      if (!layoutAndModules) {
-        setHasRendered(true);
-        return;
-      }
+			if (!layoutAndModules) {
+				setHasRendered(true);
+				return;
+			}
 			setModules(layoutAndModules.modules);
 			setLayouts((prevState) => ({
 				...prevState,
@@ -204,7 +199,7 @@ export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?
 		const componentContent = (() => {
 			switch (id) {
 				case 'rental-units':
-					return <RentalUnits key='rental-units' rentalUnits={rentalUnits} />
+					return <RentalUnits key='rental-units' rentalUnits={rentalUnits} />;
 				case 'projected-income':
 					return <ProjectedIncome key='projected-income' incomeData={incomeData} />;
 				case 'important-dates':
@@ -217,92 +212,13 @@ export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?
 					return <KeyMetrics key='key-metrics' units={rentalUnits} />;
 				case 'late-payments':
 					return <LatePayments key='late-payments' latePayments={latePayments} />;
-               case 'tenant-requests':
-          return (
-            <Card key="tenant-requests" className="h-full overflow-auto">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Tenant Requests</CardTitle>
-                <ClipboardList className="h-4 w-4" />
-              </CardHeader>
-              <CardContent>
-                <ScrollArea className="h-[300px]">
-                  {/* <pre>{JSON.stringify(tenantRequests, null, 2)}</pre> */}
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Tenant</TableHead>
-                        <TableHead>Type</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Date</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {tenantRequests.map((request) => (
-                        <TableRow key={request.id}>
-                          <TableCell>{request.tenant}</TableCell>
-                          <TableCell>{request.type}</TableCell>
-                          <TableCell>
-                            <Badge variant={request.status === 'Ny' ? 'destructive' : request.status === 'Pågår' ? 'default' : 'secondary'}>
-                              {request.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>{request.date}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          )
-
-        case 'market-trends':
-          return (
-            <Card key="market-trends" className="h-full overflow-auto">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Markedstrender</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent className="flex flex-col h-[calc(100%-2rem)]">
-                <div className="mb-2">
-                  <div className="text-2xl font-bold">10,350NOK</div>
-                  <p className="text-xs text-muted-foreground">Gjennomsnittlig leie i Norge</p>
-                </div>
-                <div className="flex-grow">
-                  <ChartContainer
-                    config={{
-                      avgPrice: {
-                        label: "Avg Price",
-                        color: "hsl(var(--chart-1))",
-                      },
-                      demand: {
-                        label: "Demand",
-                        color: "hsl(var(--chart-2))",
-                      },
-                    }}
-                    className="w-full h-full"
-                  >
-                    <ResponsiveContainer width="100%" height="100%" minHeight={200}>
-                      <LineChart data={marketTrends}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="month" />
-                        <YAxis yAxisId="left" />
-                        <YAxis yAxisId="right" orientation="right" />
-                        <ChartTooltip content={<ChartTooltipContent />} />
-                        <Line yAxisId="left" type="monotone" dataKey="avgPrice" stroke="var(--color-avgPrice)" strokeWidth={2} />
-                        <Line yAxisId="right" type="monotone" dataKey="demand" stroke="var(--color-demand)" strokeWidth={2} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </ChartContainer>
-                </div>
-              </CardContent>
-            </Card>
-          )
-
-        case 'messages':
-          return (
-				<MessagesComponent key='messages' />
-			);
+				case 'tenant-requests':
+					return <TenantRequests key='tenant-requests' mrequests={maintenanceRequests || []} />;
+					// return <MaintenanceRequests key='maintenance-requests' mrequests={maintenanceRequests} />;
+				case 'market-trends':
+					return <MarketTrends key='market-trends' />;
+				case 'messages':
+					return <MessagesComponent key='messages' />;
 				default:
 					return null;
 			}
@@ -319,7 +235,9 @@ export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?
 						<AvatarImage src='/placeholder-avatar.jpg' alt='Landlord' />
 						<AvatarFallback>MLS</AvatarFallback>
 					</Avatar>
-					<h1 className='text-2xl font-bold'>Welcome, {user.name ? user.name : user.email}</h1>
+					<h1 className='text-2xl font-bold'>
+						Velkommen, {user.name ? user.name : user.email}
+					</h1>
 				</div>
 				{/* <pre>{JSON.stringify(layouts, null, 2)}</pre> */}
 				<Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -347,7 +265,9 @@ export function LandlordDashboardComponent({ rentalUnits, user }: { rentalUnits?
 								</div>
 							))}
 						</div>
-						<Button className='rounded' onClick={() => updateLayout(layouts, modules)}>Lagre layout</Button>
+						<Button className='rounded' onClick={() => updateLayout(layouts, modules)}>
+							Lagre layout
+						</Button>
 					</SheetContent>
 				</Sheet>
 			</header>

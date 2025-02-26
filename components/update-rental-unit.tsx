@@ -40,7 +40,11 @@ export function UpdateRentalUnitComponent(props: any) {
 		monthlyrent: props.monthlyrent,
 		description: props.description,
         $id: props.$id,
+        properties: props.properties.$id || '',
 	});
+
+    console.log(`Props in update-rental-unit: ${JSON.stringify(props.properties)}`);
+    
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		setUnit({ ...unit, [e.target.name]: e.target.value });
@@ -71,13 +75,7 @@ export function UpdateRentalUnitComponent(props: any) {
 		const formData = new FormData();
 
 		Object.entries(unit).forEach(([key, value]) => {
-			console.log(`Key: ${key}, Value: ${value} in create-rental-unit handleSubmit`);
 			formData.append(key, value.toString());
-			console.log(
-				`Full formData in create-rental-unit: ${JSON.stringify(
-					formData.entries(),
-				)} after appending key value pair`,
-			);
 		});
 
 		// images.forEach((image, index) => {
@@ -144,6 +142,24 @@ export function UpdateRentalUnitComponent(props: any) {
 								<SelectItem value='apartment'>Leilighet</SelectItem>
 								<SelectItem value='house'>Enebolig</SelectItem>
 								<SelectItem value='condo'>Condo</SelectItem>
+							</SelectContent>
+						</Select>
+					</div>
+					<div>
+						<Label htmlFor='property'>Eiendom</Label>
+						<Select
+							name='property'
+							value={unit.properties}
+							onValueChange={(value) => handleSelectChange(value, 'properties')}>
+							<SelectTrigger>
+								<SelectValue placeholder={unit.properties ? unit.properties.name : 'Velg eiendom'} />
+							</SelectTrigger>
+							<SelectContent>
+								{props.properties.map((property: any) => (
+									<SelectItem key={property.$id} value={property.$id}>
+										{property.name}
+									</SelectItem>
+								))}
 							</SelectContent>
 						</Select>
 					</div>
@@ -283,7 +299,10 @@ export function UpdateRentalUnitComponent(props: any) {
 							</div>
 						)}
 						<p className='text-muted-foreground mb-2'>
-							{unit.housingtype.charAt(0).toUpperCase() + unit.housingtype.slice(1)}
+							{unit.housingtype
+								? unit.housingtype.charAt(0).toUpperCase() +
+								  unit.housingtype.slice(1)
+								: 'Ingen type oppgitt'}
 						</p>
 						<p className='mb-2'>
 							{unit.bedrooms} Soverom • {unit.bathrooms} Bad • {unit.squaremeters} kvm

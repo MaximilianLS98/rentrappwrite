@@ -22,7 +22,11 @@ interface UnitImage {
 	preview: string;
 }
 
-export function CreateRentalUnitComponent() {
+type Props = {
+  properties: {name: string, $id: string}[];
+};
+
+export function CreateRentalUnitComponent(props: Props) {
 	const router = useRouter();
 	const { toast } = useToast();
 	// const session = getCookie('session');
@@ -37,6 +41,7 @@ export function CreateRentalUnitComponent() {
 		address: 'Tulleveien 1',
 		monthlyrent: 4500,
 		description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    properties: '',
 	});
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -144,6 +149,24 @@ export function CreateRentalUnitComponent() {
 							</SelectContent>
 						</Select>
 					</div>
+          <div>
+            <Label htmlFor='property'>Eiendom</Label>
+            <Select
+              name='property'
+              value={unit.properties}
+              onValueChange={(value) => handleSelectChange(value, 'properties')}>
+              <SelectTrigger>
+                <SelectValue placeholder='Velg eiendom' />
+              </SelectTrigger>
+              <SelectContent>
+                {props.properties.map((property) => (
+                  <SelectItem key={property.$id} value={property.$id}>
+                    {property.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 					<div className='flex gap-4'>
 						<div className='flex-1'>
 							<Label htmlFor='bedrooms'>Soverom</Label>

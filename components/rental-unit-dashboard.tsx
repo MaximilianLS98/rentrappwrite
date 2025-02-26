@@ -21,7 +21,8 @@ import { getImageIdList } from '@/actions/images';
 
 
 export async function RentalUnitDashboardComponent(unit: any) {
-	const imageIdList = await getImageIdList();
+	const sessionCookie = (await cookies()).get('session')?.value as string;
+	const imageIdList = await getImageIdList(sessionCookie);
 	
 	const graphData = [
 		{ year: '2020', unitIncome: 12000, areaIncome: 15000, forecast: 13000 },
@@ -140,7 +141,7 @@ export async function RentalUnitDashboardComponent(unit: any) {
 						<CardContent>
 							<div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
 								{imageIdList.map((file: any) => (
-									<AppwriteImage fileId={file.$id} width={300} height={200} />
+									<AppwriteImage fileId={file.$id} width={300} height={200} key={file.$id} />
 								))}
 							</div>
 							<UploadMultipleFiles />
