@@ -2,6 +2,8 @@
 import { createSessionClient } from '@/appwrite/config';
 import { ID, Query } from 'node-appwrite';
 import auth from '@/utils/auth';
+import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 // Page with server actions for the properties collection, fetching etc
 // Trying server actions to have something work well in client components as well as server components
@@ -67,7 +69,9 @@ const createProperty = async (sessionCookie: string, propertyData: any) => {
 			ID.unique(),
 			propertyData,
 		);
-		return property;
+        revalidatePath('/properties');
+        redirect('/properties');
+		// return property;
 	} catch (error) {
 		console.error(error);
 		return { error };
@@ -78,7 +82,8 @@ const updatePropertyById = async (sessionCookie: string, id: string, propertyDat
 	try {
 		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
 		const property = await databases.updateDocument(databaseId, collectionId, id, propertyData);
-		return property;
+        revalidatePath('/properties');
+        redirect('/properties');
 	} catch (error) {
 		console.error(error);
 		return { error };
