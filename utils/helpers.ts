@@ -22,7 +22,7 @@ export const occupancyRateCalc = (units: TUnit[]) => {
     if (!units) return { percentage: 0, occupied: 0, vacant: 0 };
 
     const occupiedUnits = units.filter(unit => unit.status !== 'vacant');
-    const percentage = (occupiedUnits.length / units.length) * 100;
+    const percentage = parseFloat(((occupiedUnits.length / units.length) * 100).toFixed(2));
     // return an object with the percentage and the number of occupied / vacant units
     return { percentage, occupied: occupiedUnits.length, vacant: units.length - occupiedUnits.length };
 }
