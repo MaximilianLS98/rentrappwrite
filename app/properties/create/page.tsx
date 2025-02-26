@@ -46,7 +46,6 @@ export default function () {
         status: 'vacant',
 
 	});
-	const [units, setUnits] = useState<TUnit[]>([]);
 
 	// useEffect for setting the property data from local storage into the state, done this way to avoid hydration issues
 	useEffect(() => {
@@ -82,68 +81,23 @@ export default function () {
 		});
 	};
 
-	// const submitProperty = async () => {
-	// 	const sessionCookie = (await fetch('/api/cookie').then((res) => res.json())) || '';
-	// 	console.log(`Session cookie in submitProperty: ${JSON.stringify(sessionCookie)}`);
-	// 	const result = await createProperty(sessionCookie.session, property) as TProperty;
-	// 	// TODO - This also needs to add the units to the units collection
-    //     // If there are any units created for the property, create them and add the property ID to the units
-    //     if (units.length !== 0) {
-    //         const unitResults = await Promise.all(
-    //             units.map(async (unit) => {
-    //                 unit.properties = [result.$id];
-    //                 return createUnit(sessionCookie.session, unit);
-    //             }),
-    //         );
-    //     }
-	// 	console.log(result);
-    //     console.log(result.$id);
-	// 	cleanUp();
-	// };
-
     const submitProperty = async () => {
 		try {
 			const sessionCookie = (await fetch('/api/cookie').then((res) => res.json())) || '';
 			console.log(`Session cookie in submitProperty: ${JSON.stringify(sessionCookie)}`);
-
 			// Create the property first
-			const result = (await createProperty(sessionCookie.session, property)) as TProperty;
+			const result = (await createProperty(sessionCookie.session, property)) as any;
 			console.log('Property created:', result);
 
 			if (!result?.$id) {
 				throw new Error('Property creation failed: No ID returned');
 			}
 
-			// If there are units, create them with the property ID
-			if (units.length > 0) {
-				const unitPromises = units.map(async (unit) => {
-					try {
-						unit.properties = result.$id;
-						return await createUnit(sessionCookie.session, unit);
-					} catch (unitError) {
-						console.error('Failed to create unit:', unit, unitError);
-						return null; // Allows other units to attempt creation
-					}
-				});
-
-				const unitResults = await Promise.all(unitPromises);
-				const successfulUnits = unitResults.filter((unit) => unit !== null);
-
-				if (successfulUnits.length === 0) {
-					console.warn('No units were successfully created.');
-				} else {
-					console.log('Successfully created units:', successfulUnits);
-				}
-			}
-
-			// Cleanup only if everything succeeds
 			cleanUp();
 		} catch (error) {
 			console.error('Error submitting property:', error);
 		}
 	};
-
-	// ! This needs to be heavily modified, because the units should be POST'ed to the units collection when the property is created/POST'ed
 
 	const cleanUpUnitForm = () => {
 		setUnit({
@@ -156,17 +110,21 @@ export default function () {
 		});
 	};
 
+    // These three functions works like this: unitChange updates the unit state with the new values, addUnit adds the unit to the property state and resets the unit state, and removeUnit removes the unit from the property state
 	const handleAddUnit = (unit: TUnit) => {
-		setUnits((prev) => [...prev, unit]);
+		setProperty((prev) => ({ ...prev, units: [...(prev.units || []), unit] }));
 		cleanUpUnitForm();
 	};
 	const handleUnitChange = (unit: Partial<TUnit>) => {
 		setUnit((prev: Partial<TUnit>) => ({ ...prev, ...unit }));
 	};
 	const handleRemoveUnit = (id: string) => {
-		setUnits((prev) => prev.filter((unit) => unit.$id !== id));
+        setProperty((prev) => ({
+            ...prev,
+            units: prev.units?.filter((unit) => unit.$id !== id),
+        }));
 	};
-	// ! This needs to be heavily modified, because the units should be POST'ed to the units collection when the property is created/POST'ed
+
 
 	return (
 		<div className='container mx-auto p-4'>
@@ -198,7 +156,7 @@ export default function () {
 									<Label htmlFor='postcode'>Postkode</Label>
 									<Input
 										id='postcode'
-										value={property.postcode}
+										value={property.postcode as string}
 										onChange={(e) =>
 											handlePropertyChange({ postcode: e.target.value })
 										}
@@ -209,7 +167,7 @@ export default function () {
 								<Label htmlFor='title'>Kvadratmeter</Label>
 								<Input
 									id='squaremeters'
-									value={property.squaremeters}
+									value={property.squaremeters as number}
 									type='number'
 									onChange={(e) =>
 										handlePropertyChange({
@@ -223,7 +181,7 @@ export default function () {
 									<Label htmlFor='bathrooms'>Antall baderom</Label>
 									<Input
 										id='bathrooms'
-										value={property.bathrooms}
+										value={property.bathrooms as number}
 										type='number'
 										onChange={(e) =>
 											handlePropertyChange({
@@ -236,7 +194,7 @@ export default function () {
 									<Label htmlFor='bedrooms'>Antall soverom</Label>
 									<Input
 										id='bedrooms'
-										value={property.bedrooms}
+										value={property.bedrooms as number}
 										type='number'
 										onChange={(e) =>
 											handlePropertyChange({
@@ -388,7 +346,7 @@ export default function () {
 									<h3 className='text-xl font-semibold'>Units</h3>
 									<ul className='list-disc list-inside'>
 										{property.units.map((unit) => (
-											<li key={unit.$id}>
+											<li key={unit.title}>
 												Unit {unit.address}: {unit.bedrooms} bed,{' '}
 												{unit.bathrooms} bath, {unit.squaremeters} sqft
 											</li>
@@ -397,7 +355,7 @@ export default function () {
 								</div>
 							)}
 						</CardContent>
-						<pre>{JSON.stringify(units, null, 2)}</pre>
+						<pre>{JSON.stringify(property.units, null, 2)}</pre>
 					</Card>
 				</div>
 			</div>
