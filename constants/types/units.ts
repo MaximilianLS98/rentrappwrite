@@ -1,4 +1,5 @@
 import { TProperty } from "./properties";
+import { TImageMetaData } from "./imageMetaData";
 
 type FetchUnit = {
     total: number;
@@ -67,6 +68,7 @@ type TUnit = {
     $databaseId: string;
     $collectionId: string;
     unitNumber?: string;
+    images?: TImageMetaData[];
 }
 
 export type { TUnit, FetchUnit };
