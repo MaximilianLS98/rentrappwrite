@@ -47,7 +47,13 @@ export default async function Login() {
 							</div>
 							<div className='space-y-2'>
 								<Label htmlFor='password'>Password</Label>
-								<Input id='password' type='password' name='password' defaultValue={'Maxi123498'} required />
+								<Input
+									id='password'
+									type='password'
+									name='password'
+									defaultValue={'Maxi123498'}
+									required
+								/>
 							</div>
 							<Button type='submit' className='w-full'>
 								Login
@@ -96,6 +102,10 @@ export default async function Login() {
 						</Link>
 					</p>
 				</CardFooter>
+			<div>
+				<p>maximilian+tester@kaktusfamilien.no</p>
+				<p>Test1234</p>
+			</div>
 			</Card>
 		</div>
 	);
