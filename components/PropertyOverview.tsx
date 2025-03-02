@@ -62,8 +62,11 @@ export function PropertyOverview({
 					<DollarSign className='h-4 w-4 text-muted-foreground' />
 				</CardHeader>
 				<CardContent className='group-hover:text-rentr-main'>
-					<div className='text-2xl font-bold'>
-						{currencyFormatter(totalRentOccupied(units.documents), false)} /{' '} {currencyFormatter(totalRentProperty(units.documents), false)}
+					<div className='flex text-2xl font-bold'>
+						{currencyFormatter(totalRentOccupied(units.documents), false)}
+						<span className='hidden group-hover:block'>
+						  {` / ${currencyFormatter(totalRentProperty(units.documents), false)}`}
+						</span>
 					</div>
 				</CardContent>
 			</Card>
