@@ -18,11 +18,14 @@ import { cookies } from 'next/headers';
 import IncomeGraph from './landlordDashboard/IncomeGraph';
 import Link from 'next/link';
 import { getImageIdList } from '@/actions/images';
+import { TUnit } from '@/constants/types/units';
 
 
-export async function RentalUnitDashboardComponent(unit: any) {
+export async function RentalUnitDashboardComponent(unit: TUnit) {
 	const sessionCookie = (await cookies()).get('session')?.value as string;
-	const imageIdList = await getImageIdList(sessionCookie);
+	// const imageIdList = await getImageIdList(sessionCookie);
+	const imageIdList = unit.images || [];
+	const unitId = unit.$id;
 	
 	const graphData = [
 		{ year: '2020', unitIncome: 12000, areaIncome: 15000, forecast: 13000 },
@@ -144,7 +147,7 @@ export async function RentalUnitDashboardComponent(unit: any) {
 									<AppwriteImage fileId={file.$id} width={300} height={200} key={file.$id} />
 								))}
 							</div>
-							<UploadMultipleFiles />
+							<UploadMultipleFiles unitId={unitId} />
 						</CardContent>
 					</Card>
 				</TabsContent>
