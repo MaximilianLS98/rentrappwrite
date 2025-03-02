@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import dynamic from 'next/dynamic';
+import { toast } from 'sonner';
 
 const RadioGroup = dynamic(
 	() => import('@/components/ui/radio-group').then((mod) => mod.RadioGroup),
@@ -30,21 +31,20 @@ export default function () {
 		bedrooms: 0,
 		bathrooms: 0,
 		type: 'singlehome',
-        squaremeters: 0,
+		squaremeters: 0,
 		units: [] as TUnit[],
 	});
 	// const [unit, setUnit] = useState<TUnit>();
 	const [unit, setUnit] = useState<Partial<TUnit>>({
 		title: '',
-        description: '',
+		description: '',
 		unitNumber: '',
 		address: '',
 		bedrooms: 0,
 		bathrooms: 0,
 		squaremeters: 0,
 		monthlyrent: 0,
-        status: 'vacant',
-
+		status: 'vacant',
 	});
 
 	// useEffect for setting the property data from local storage into the state, done this way to avoid hydration issues
@@ -81,20 +81,39 @@ export default function () {
 		});
 	};
 
-    const submitProperty = async () => {
+	const submitProperty = async () => {
 		try {
+			if (property.type === 'singlehome') {
+				// set property.units to a unit with the property data
+				setProperty((prev) => ({
+					...prev,
+					units: [
+						{
+							title: property.name,
+							address: property.address,
+							bedrooms: property.bedrooms || 0,
+							bathrooms: property.bathrooms || 0,
+							squaremeters: property.squaremeters || 0,
+							unitNumber: '01',
+						} as TUnit,
+					],
+				}));
+			}
 			const sessionCookie = (await fetch('/api/cookie').then((res) => res.json())) || '';
 			console.log(`Session cookie in submitProperty: ${JSON.stringify(sessionCookie)}`);
 			// Create the property first
 			const result = (await createProperty(sessionCookie.session, property)) as any;
+            toast.success('Property created successfully');
 			console.log('Property created:', result);
 
 			if (!result?.$id) {
+                toast.error('Property creation failed');
 				throw new Error('Property creation failed: No ID returned');
 			}
 
 			cleanUp();
 		} catch (error) {
+            toast.error('Error submitting property');
 			console.error('Error submitting property:', error);
 		}
 	};
@@ -110,7 +129,7 @@ export default function () {
 		});
 	};
 
-    // These three functions works like this: unitChange updates the unit state with the new values, addUnit adds the unit to the property state and resets the unit state, and removeUnit removes the unit from the property state
+	// These three functions works like this: unitChange updates the unit state with the new values, addUnit adds the unit to the property state and resets the unit state, and removeUnit removes the unit from the property state
 	const handleAddUnit = (unit: TUnit) => {
 		setProperty((prev) => ({ ...prev, units: [...(prev.units || []), unit] }));
 		cleanUpUnitForm();
@@ -119,12 +138,11 @@ export default function () {
 		setUnit((prev: Partial<TUnit>) => ({ ...prev, ...unit }));
 	};
 	const handleRemoveUnit = (id: string) => {
-        setProperty((prev) => ({
-            ...prev,
-            units: prev.units?.filter((unit) => unit.$id !== id),
-        }));
+		setProperty((prev) => ({
+			...prev,
+			units: prev.units?.filter((unit) => unit.$id !== id),
+		}));
 	};
-
 
 	return (
 		<div className='container mx-auto p-4'>
@@ -229,7 +247,7 @@ export default function () {
 										Legg til enheter i eiendommen
 									</h2>
 									<p className='text-muted-foreground tex-sm'>
-										Dette kan gjøres senere i oversikten
+										Dette kan også gjøres senere i oversikten
 									</p>
 									<div className='grid gap-4'>
 										<div>
@@ -293,7 +311,8 @@ export default function () {
 													onChange={(e) =>
 														handleUnitChange({
 															...unit,
-															bathrooms: parseInt(e.target.value) || 0,
+															bathrooms:
+																parseInt(e.target.value) || 0,
 														})
 													}
 												/>
@@ -306,7 +325,8 @@ export default function () {
 													onChange={(e) =>
 														handleUnitChange({
 															...unit,
-															squaremeters: parseInt(e.target.value) || 0,
+															squaremeters:
+																parseInt(e.target.value) || 0,
 														})
 													}
 												/>
