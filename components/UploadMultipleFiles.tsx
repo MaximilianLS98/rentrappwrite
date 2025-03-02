@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 // 	onImagesUploaded: (imageUrls: string[]) => void;
 // }
 
-export default function UploadMultipleFiles(/*{ onImagesUploaded }: ImageUploaderProps*/) {
+export default function UploadMultipleFiles({ unitId }: {unitId: string}) {
 	const [files, setFiles] = useState<File[]>([]);
 	const [uploading, setUploading] = useState(false);
 	const [progress, setProgress] = useState(0);
@@ -47,6 +47,10 @@ export default function UploadMultipleFiles(/*{ onImagesUploaded }: ImageUploade
 		files.forEach((file, index) => {
 			formData.append(`image${index}`, file);
 		});
+		// add the unit id to the form data, so we can associate the images with the unit, if there is a unitId in the props
+		if (unitId) {
+			formData.append('unitId', unitId);
+		}
 
 		try {
 			const response = await axiosInstanceClient.post('api/bucket/images', formData, {
@@ -102,7 +106,7 @@ export default function UploadMultipleFiles(/*{ onImagesUploaded }: ImageUploade
 						<>Uploading...</>
 					) : (
 						<>
-							<Upload className='mr-2 h-4 w-4' /> Upload
+							<Upload className='mr-2 h-4 w-4' /> Last opp
 						</>
 					)}
 				</Button>
