@@ -4,6 +4,7 @@ import Dashboard from '@/app/properties/dashboard';
 import { getAllProperties } from '@/actions/properties';
 import { getAllUnits } from '@/actions/units';
 import { getActiveMaintenanceRequests } from '@/actions/maintenanceRequests';
+import { checkForInactiveLeases } from '@/actions/leases';
 import {
 	TFetchMaintenanceRequests,
 	TMaintenanceRequest,
@@ -22,6 +23,7 @@ export default async function Page() {
 	const maintenancerequests = (await getActiveMaintenanceRequests(
 		session,
 	)) as TFetchMaintenanceRequests;
+    const response = await checkForInactiveLeases(session);
 
 	const user = await auth.getUser();
 	const isAdmin = user.labels.includes('admin');
@@ -53,6 +55,7 @@ export default async function Page() {
 			)}
 			{/* <pre>{JSON.stringify(maintenancerequests, null, 4)}</pre> */}
 			{isAdmin ? <pre>{JSON.stringify(user, null, 4)}</pre> : null}
+            <pre>{JSON.stringify(response.changedUnits, null, 4)}</pre>
 		</div>
 	);
 }
