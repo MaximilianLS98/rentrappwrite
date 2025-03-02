@@ -159,7 +159,7 @@ export default function TenantRequests({ mrequests }: MaintenanceRequestsProps) 
 								<div>
 									<div className='font-medium'>{request.title}</div>
 									<div className='text-sm text-muted-foreground'>
-										{request.units.address}
+										{request.units ? request.units.address : 'Ingen enhet'}
 									</div>
 								</div>
 								<Badge
