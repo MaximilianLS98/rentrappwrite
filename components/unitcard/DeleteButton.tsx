@@ -2,7 +2,8 @@
 import { Button } from '../ui/button';
 import { axiosInstanceClient } from '@/utils/clientAxios';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/hooks/use-toast';
+// import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { Trash2 } from 'lucide-react';
 import {
 	AlertDialog,
@@ -20,7 +21,7 @@ import {
 // TODO - Refactor so it can delete from any collection
 export default function DeleteButton(props: { id: string; redirect?: boolean; setUnits?: any }) {
 	const router = useRouter();
-	const { toast } = useToast();
+	// const { toast } = useToast();
 
 	const handleDelete = async (e: any) => {
 		e.preventDefault();
@@ -40,28 +41,15 @@ export default function DeleteButton(props: { id: string; redirect?: boolean; se
 					return prev.filter((unit: any) => unit.$id !== props.id);
 				});
 			}
-			toast({
-				title: 'Unit Deleted',
-				description: 'Unit was deleted successfully',
-			});
+			toast.success('Enheten ble slettet');
 		} catch (error) {
 			console.error(error);
-			toast({
-				title: 'Error',
-				description: 'Could not delete unit',
-				variant: 'destructive',
-			});
+			toast.error('Kunne ikke slette enheten');
 		}
 	};
 
 	return (
 		<>
-			{/* <Button
-				className='w-full rounded'
-				onClick={(e) => handleDelete(e)}
-				variant={'destructive'}>
-				<Trash2 size={16} className='' />
-			</Button> */}
 			<AlertDialog>
 				<AlertDialogTrigger asChild className='bg-destructive rounded'>
 					<Button className='w-full rounded' variant={'destructive'}>
@@ -80,7 +68,9 @@ export default function DeleteButton(props: { id: string; redirect?: boolean; se
 					</AlertDialogHeader>
 					<AlertDialogFooter>
 						<AlertDialogCancel>Avbryt</AlertDialogCancel>
-						<AlertDialogAction className='bg-destructive' onClick={(e) => handleDelete(e)}>
+						<AlertDialogAction
+							className='bg-destructive'
+							onClick={(e) => handleDelete(e)}>
 							Slett enhet
 						</AlertDialogAction>
 					</AlertDialogFooter>
