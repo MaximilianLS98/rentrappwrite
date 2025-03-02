@@ -61,7 +61,10 @@ const getPropertyById = async (sessionCookie: string, id: string) => {
 const createProperty = async (sessionCookie: string, propertyData: any) => {
 	const userId = (await auth.getUser()).$id;
 	propertyData.owner = userId;
+    let redirectPath: string = '/';
+
 	try {
+        redirectPath = '/properties';        
 		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
 		const property = await databases.createDocument(
 			databaseId,
@@ -69,13 +72,15 @@ const createProperty = async (sessionCookie: string, propertyData: any) => {
 			ID.unique(),
 			propertyData,
 		);
-        revalidatePath('/properties');
-        redirect('/properties');
 		// return property;
 	} catch (error) {
 		console.error(error);
+        redirectPath = '/properties/create';
 		return { error };
-	}
+	} finally {
+        revalidatePath('/properties');
+        redirect(redirectPath);
+    }
 };
 
 const updatePropertyById = async (sessionCookie: string, id: string, propertyData: any) => {
@@ -98,7 +103,10 @@ const deletePropertyById = async (sessionCookie: string, id: string) => {
 	} catch (error) {
 		console.error(error);
 		return { error };
-	}
+	} finally {
+        revalidatePath('/properties');
+        redirect('/properties');
+    }
 };
 
 export {
