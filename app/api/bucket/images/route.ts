@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 				throw new Error('Bucket ID is not defined');
 			}
 			const response = await storageClient.createFile(
-				bucketId, // Replace with actual bucket ID
+				bucketId,
 				fileId,
 				appwriteFile, // Appwrite requires Uint8Array
 			);
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
 						name: imageFile.name,
 						type: imageFile.type,
 						size: imageFile.size,
-						units: fileId,
+						units: formData.get('unitId') || null,
 					},
 				);
 				console.log(`Document created: ${JSON.stringify(document)}`);

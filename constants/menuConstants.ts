@@ -1,33 +1,28 @@
 export const menuConstants = [
-	{
-		name: 'Home',
-		id: 'home',
-		href: '/',
-	},
+	// {
+	// 	name: 'Hjem',
+	// 	id: 'home',
+	// 	href: '/',
+	// },
 	// {
 	// 	name: 'Marketplace',
 	// 	id: 'marketplace',
 	// 	href: '/marketplace',
 	// },
 	{
-		name: 'Enheter',
-		id: 'units',
-		href: '/units',
-	},
-	{
 		name: 'Oversikt',
 		id: 'properties',
 		href: '/properties',
 	},
 	{
+		name: 'Enheter',
+		id: 'units',
+		href: '/units',
+	},
+	{
 		name: 'Dashboard',
 		id: 'utleier',
 		href: '/dashboard',
-	},
-	{
-		name: 'Test',
-		id: 'test',
-		href: '/test',
 	},
 	// {
 	// 	name: 'Chat',

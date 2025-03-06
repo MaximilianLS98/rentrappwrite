@@ -319,9 +319,9 @@ export default function MultiUnitPropertyManagement(props: {
 					</Tabs>
 				</CardContent>
 				<CardFooter className='flex justify-between'>
-					<Button variant='outline'>Download Reports</Button>
+					<Button variant='outline'>Last ned rapport</Button>
 					<Link href={`/properties/${props.property?.$id}`}>
-						<Button>Manage Property</Button>
+						<Button>Administrer</Button>
 					</Link>
 				</CardFooter>
 			</Card>

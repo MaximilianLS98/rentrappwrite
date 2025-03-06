@@ -2,6 +2,8 @@
 import { createSessionClient } from '@/appwrite/config';
 import { ID, Query } from 'node-appwrite';
 import auth from '@/utils/auth';
+import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 // Page with server actions for the properties collection, fetching etc
 // Trying server actions to have something work well in client components as well as server components
@@ -59,7 +61,10 @@ const getPropertyById = async (sessionCookie: string, id: string) => {
 const createProperty = async (sessionCookie: string, propertyData: any) => {
 	const userId = (await auth.getUser()).$id;
 	propertyData.owner = userId;
+    let redirectPath: string = '/';
+
 	try {
+        redirectPath = '/properties';        
 		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
 		const property = await databases.createDocument(
 			databaseId,
@@ -67,18 +72,23 @@ const createProperty = async (sessionCookie: string, propertyData: any) => {
 			ID.unique(),
 			propertyData,
 		);
-		return property;
+		// return property;
 	} catch (error) {
 		console.error(error);
+        redirectPath = '/properties/create';
 		return { error };
-	}
+	} finally {
+        revalidatePath('/properties');
+        redirect(redirectPath);
+    }
 };
 
 const updatePropertyById = async (sessionCookie: string, id: string, propertyData: any) => {
 	try {
 		const { databases, databaseId, collectionId } = await getDatabase(sessionCookie);
 		const property = await databases.updateDocument(databaseId, collectionId, id, propertyData);
-		return property;
+        revalidatePath('/properties');
+        redirect('/properties');
 	} catch (error) {
 		console.error(error);
 		return { error };
@@ -93,7 +103,10 @@ const deletePropertyById = async (sessionCookie: string, id: string) => {
 	} catch (error) {
 		console.error(error);
 		return { error };
-	}
+	} finally {
+        revalidatePath('/properties');
+        redirect('/properties');
+    }
 };
 
 export {

@@ -58,10 +58,10 @@ type TProperty = {
     $databaseId: string;
     $collectionId: string;
     units: TUnit[] | null;
-    postcode?: string;
-    bathrooms?: number;
-    bedrooms?: number;
-    squaremeters?: number;
+    postcode?: string | null;
+    bathrooms?: number | null;
+    bedrooms?: number | null;
+    squaremeters?: number | null;
 };
 
 export type { TPropertyFetch, TProperty };

@@ -82,14 +82,14 @@ export function CreateRentalUnitComponent(props: Props) {
 			);
 		});
 
-		// images.forEach((image, index) => {
-		// 	formData.append(`image${index}`, image.file);
-		// });
-		// console.log(
-		// 	`Form data in create-rental-unit: ${JSON.stringify(
-		// 		formData,
-		// 	)} but before try catch block`,
-		// );
+		images.forEach((image, index) => {
+			formData.append(`image${index}`, image.file);
+		});
+		console.log(
+			`Form data in create-rental-unit: ${JSON.stringify(
+				formData,
+			)} but before try catch block`,
+		);
 
 		try {
 			// console.log(

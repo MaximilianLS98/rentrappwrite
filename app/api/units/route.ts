@@ -6,6 +6,7 @@ import { Query } from 'node-appwrite';
 import { revalidatePath } from 'next/cache';
 import auth from '@/utils/auth';
 import { uploadImagesWithMetadata, uploadUnitDocument } from './helpers';
+import { uploadImage } from '@/actions/images';
 
 /* 
  TODO: We need to extract parts of the code into helper functions, so that we can reuse them in other routes and have a cleaner codebase
@@ -73,6 +74,11 @@ export async function POST(request: NextRequest) {
 			}
 		});
 
+	// We need to extract any keys that are not images, because appwrite will not accept images in the unit collection
+	const unitWithoutImages = Object.fromEntries(
+		Object.entries(unit).filter(([key]) => !key.includes('image')),
+	);
+
 	try {
 		const { databases } = await createSessionClient(sessionCookie?.value);
 		const databaseId = process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID;
@@ -80,9 +86,21 @@ export async function POST(request: NextRequest) {
 		if (!databaseId || !collectionId) {
 			throw new Error('Database ID or collection ID is not defined');
 		}
-		const createdUnit = await databases.createDocument(databaseId, collectionId, ID.unique(), unit);
+		const createdUnit = await databases.createDocument(databaseId, collectionId, ID.unique(), unitWithoutImages);
+		// If the unit was created successfully, we can now upload the images stored in the formData as image${index} with file as value. The server action takes the file as first argument, and the unitId as second argument
+		const images = [];
+		for (const [key, value] of data.entries()) {
+			if (key.includes('image')) {
+				images.push(value as File);
+			}
+		}
+		let result;
+		for (let i = 0; i < images.length; i++) {
+			const image = images[i];
+			result = await uploadImage(image, createdUnit.$id, sessionCookie?.value);
+		}
 		revalidatePath('/units');
-		return NextResponse.json(createdUnit);
+		return NextResponse.json({unit: createdUnit , images: result});
 	} catch (error) {
 		console.error(error);
 		return NextResponse.json({ error: 'Access denied' }, { status: 403 });

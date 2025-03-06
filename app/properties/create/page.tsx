@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import dynamic from 'next/dynamic';
+import { toast } from 'sonner';
 
 const RadioGroup = dynamic(
 	() => import('@/components/ui/radio-group').then((mod) => mod.RadioGroup),
@@ -30,23 +31,21 @@ export default function () {
 		bedrooms: 0,
 		bathrooms: 0,
 		type: 'singlehome',
-        squaremeters: 0,
+		squaremeters: 0,
 		units: [] as TUnit[],
 	});
 	// const [unit, setUnit] = useState<TUnit>();
 	const [unit, setUnit] = useState<Partial<TUnit>>({
 		title: '',
-        description: '',
+		description: '',
 		unitNumber: '',
 		address: '',
 		bedrooms: 0,
 		bathrooms: 0,
 		squaremeters: 0,
 		monthlyrent: 0,
-        status: 'vacant',
-
+		status: 'vacant',
 	});
-	const [units, setUnits] = useState<TUnit[]>([]);
 
 	// useEffect for setting the property data from local storage into the state, done this way to avoid hydration issues
 	useEffect(() => {
@@ -82,68 +81,42 @@ export default function () {
 		});
 	};
 
-	// const submitProperty = async () => {
-	// 	const sessionCookie = (await fetch('/api/cookie').then((res) => res.json())) || '';
-	// 	console.log(`Session cookie in submitProperty: ${JSON.stringify(sessionCookie)}`);
-	// 	const result = await createProperty(sessionCookie.session, property) as TProperty;
-	// 	// TODO - This also needs to add the units to the units collection
-    //     // If there are any units created for the property, create them and add the property ID to the units
-    //     if (units.length !== 0) {
-    //         const unitResults = await Promise.all(
-    //             units.map(async (unit) => {
-    //                 unit.properties = [result.$id];
-    //                 return createUnit(sessionCookie.session, unit);
-    //             }),
-    //         );
-    //     }
-	// 	console.log(result);
-    //     console.log(result.$id);
-	// 	cleanUp();
-	// };
-
-    const submitProperty = async () => {
+	const submitProperty = async () => {
 		try {
+			if (property.type === 'singlehome') {
+				// set property.units to a unit with the property data
+				setProperty((prev) => ({
+					...prev,
+					units: [
+						{
+							title: property.name,
+							address: property.address,
+							bedrooms: property.bedrooms || 0,
+							bathrooms: property.bathrooms || 0,
+							squaremeters: property.squaremeters || 0,
+							unitNumber: '01',
+						} as TUnit,
+					],
+				}));
+			}
 			const sessionCookie = (await fetch('/api/cookie').then((res) => res.json())) || '';
 			console.log(`Session cookie in submitProperty: ${JSON.stringify(sessionCookie)}`);
-
 			// Create the property first
-			const result = (await createProperty(sessionCookie.session, property)) as TProperty;
+			const result = (await createProperty(sessionCookie.session, property)) as any;
+            toast.success('Property created successfully');
 			console.log('Property created:', result);
 
 			if (!result?.$id) {
+                toast.error('Property creation failed');
 				throw new Error('Property creation failed: No ID returned');
 			}
 
-			// If there are units, create them with the property ID
-			if (units.length > 0) {
-				const unitPromises = units.map(async (unit) => {
-					try {
-						unit.properties = result.$id;
-						return await createUnit(sessionCookie.session, unit);
-					} catch (unitError) {
-						console.error('Failed to create unit:', unit, unitError);
-						return null; // Allows other units to attempt creation
-					}
-				});
-
-				const unitResults = await Promise.all(unitPromises);
-				const successfulUnits = unitResults.filter((unit) => unit !== null);
-
-				if (successfulUnits.length === 0) {
-					console.warn('No units were successfully created.');
-				} else {
-					console.log('Successfully created units:', successfulUnits);
-				}
-			}
-
-			// Cleanup only if everything succeeds
 			cleanUp();
 		} catch (error) {
+            toast.error('Error submitting property');
 			console.error('Error submitting property:', error);
 		}
 	};
-
-	// ! This needs to be heavily modified, because the units should be POST'ed to the units collection when the property is created/POST'ed
 
 	const cleanUpUnitForm = () => {
 		setUnit({
@@ -156,17 +129,20 @@ export default function () {
 		});
 	};
 
+	// These three functions works like this: unitChange updates the unit state with the new values, addUnit adds the unit to the property state and resets the unit state, and removeUnit removes the unit from the property state
 	const handleAddUnit = (unit: TUnit) => {
-		setUnits((prev) => [...prev, unit]);
+		setProperty((prev) => ({ ...prev, units: [...(prev.units || []), unit] }));
 		cleanUpUnitForm();
 	};
 	const handleUnitChange = (unit: Partial<TUnit>) => {
 		setUnit((prev: Partial<TUnit>) => ({ ...prev, ...unit }));
 	};
 	const handleRemoveUnit = (id: string) => {
-		setUnits((prev) => prev.filter((unit) => unit.$id !== id));
+		setProperty((prev) => ({
+			...prev,
+			units: prev.units?.filter((unit) => unit.$id !== id),
+		}));
 	};
-	// ! This needs to be heavily modified, because the units should be POST'ed to the units collection when the property is created/POST'ed
 
 	return (
 		<div className='container mx-auto p-4'>
@@ -198,7 +174,7 @@ export default function () {
 									<Label htmlFor='postcode'>Postkode</Label>
 									<Input
 										id='postcode'
-										value={property.postcode}
+										value={property.postcode as string}
 										onChange={(e) =>
 											handlePropertyChange({ postcode: e.target.value })
 										}
@@ -209,7 +185,7 @@ export default function () {
 								<Label htmlFor='title'>Kvadratmeter</Label>
 								<Input
 									id='squaremeters'
-									value={property.squaremeters}
+									value={property.squaremeters as number}
 									type='number'
 									onChange={(e) =>
 										handlePropertyChange({
@@ -223,7 +199,7 @@ export default function () {
 									<Label htmlFor='bathrooms'>Antall baderom</Label>
 									<Input
 										id='bathrooms'
-										value={property.bathrooms}
+										value={property.bathrooms as number}
 										type='number'
 										onChange={(e) =>
 											handlePropertyChange({
@@ -236,7 +212,7 @@ export default function () {
 									<Label htmlFor='bedrooms'>Antall soverom</Label>
 									<Input
 										id='bedrooms'
-										value={property.bedrooms}
+										value={property.bedrooms as number}
 										type='number'
 										onChange={(e) =>
 											handlePropertyChange({
@@ -271,7 +247,7 @@ export default function () {
 										Legg til enheter i eiendommen
 									</h2>
 									<p className='text-muted-foreground tex-sm'>
-										Dette kan gjøres senere i oversikten
+										Dette kan også gjøres senere i oversikten
 									</p>
 									<div className='grid gap-4'>
 										<div>
@@ -335,7 +311,8 @@ export default function () {
 													onChange={(e) =>
 														handleUnitChange({
 															...unit,
-															bathrooms: parseInt(e.target.value) || 0,
+															bathrooms:
+																parseInt(e.target.value) || 0,
 														})
 													}
 												/>
@@ -348,7 +325,8 @@ export default function () {
 													onChange={(e) =>
 														handleUnitChange({
 															...unit,
-															squaremeters: parseInt(e.target.value) || 0,
+															squaremeters:
+																parseInt(e.target.value) || 0,
 														})
 													}
 												/>
@@ -388,7 +366,7 @@ export default function () {
 									<h3 className='text-xl font-semibold'>Units</h3>
 									<ul className='list-disc list-inside'>
 										{property.units.map((unit) => (
-											<li key={unit.$id}>
+											<li key={unit.title}>
 												Unit {unit.address}: {unit.bedrooms} bed,{' '}
 												{unit.bathrooms} bath, {unit.squaremeters} sqft
 											</li>
@@ -397,7 +375,7 @@ export default function () {
 								</div>
 							)}
 						</CardContent>
-						<pre>{JSON.stringify(units, null, 2)}</pre>
+						<pre>{JSON.stringify(property.units, null, 2)}</pre>
 					</Card>
 				</div>
 			</div>
