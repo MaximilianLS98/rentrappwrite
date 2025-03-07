@@ -13,6 +13,7 @@ import {
 	TMaintenanceRequest,
 } from '@/constants/types/maintenancerequests';
 import { FetchUnit } from '@/constants/types/units';
+import { PlusIcon } from 'lucide-react';
 
 // Mock data
 const propertyData = {
@@ -69,13 +70,19 @@ export default function Dashboard(props: Props) {
 				<h1 className='text-3xl font-bold'>Dashboard</h1>
 				<div className='space-x-2'>
 					<Link href='/leases/create'>
-						<Button variant={'rentr'}>Ny leiekontrakt</Button>
+						<Button className='rounded' variant={'rentr'}>Ny leiekontrakt</Button>
 					</Link>
 					<Link href='/properties/create'>
-						<Button variant={'outline'}>Legg til eiendom</Button>
+						<Button className='rounded' variant={'outline'}>
+              Legg til eiendom
+              <PlusIcon className='h-4 w-4' />
+            </Button>
 					</Link>
 					<Link href='/units/create'>
-						<Button variant={'outline'}>Legg til enhet</Button>
+						<Button className='rounded' variant={'outline'}>
+              Legg til enhet
+              <PlusIcon className='h-4 w-4' />
+            </Button>
 					</Link>
 					{/* <AddPropertyButton /> */}
 					{/* <AddUnitButton /> */}

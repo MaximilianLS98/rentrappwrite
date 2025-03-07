@@ -206,30 +206,6 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 		}
 	};
 
-	// const handleAddComment = () => {
-	// 	if (selectedRequest && newComment.trim()) {
-	// 		const updatedRequest = {
-	// 			...selectedRequest,
-	// 			comments: [
-	// 				...selectedRequest.comments,
-	// 				{
-	// 					id: Date.now().toString(),
-	// 					text: newComment,
-	// 					date: new Date().toISOString().split('T')[0],
-	// 				},
-	// 			],
-	// 		};
-	// 		setFormattedRequests(
-	// 		  Object.values(formattedRequests).reduce((acc, r) => {
-	// 			acc[r.id] = r.id === updatedRequest.id ? updatedRequest : r;
-	// 			return acc;
-	// 		  }, {} as { [key: string]: { id: string; title: string; type: string; priority: string; status: string } })
-	// 		);
-	// 		setSelectedRequest(updatedRequest);
-	// 		setNewComment('');
-	// 	}
-	// };
-
 	return (
 		<div className='container mx-auto p-4'>
 			<h1 className='text-2xl font-bold mb-4'>Maintenance Requests</h1>
@@ -302,7 +278,6 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 																				{request.priority}
 																			</Badge>
 																		</div>
-                                                                        {/* <pre>{JSON.stringify(request, null, 2)}</pre> */}
 																	</CardContent>
 																</Card>
 															</div>
@@ -319,10 +294,7 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 					</div>
 				</DragDropContext>
 			</ErrorBoundary>
-			<div className='flex justify-between'>
-				{/* <pre>{JSON.stringify(formattedRequests, null, 2)}</pre> */}
-				{/* <pre>{JSON.stringify(formattedColumns, null, 2)}</pre> */}
-			</div>
+			<div className='flex justify-between'></div>
 			<Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
 				<DialogContent>
 					<DialogHeader>
@@ -332,55 +304,36 @@ function SimpleKanbanBoard({ total, documents }: TFetchMaintenanceRequests) {
 					<div className='grid gap-4 py-4'>
 						<div className='grid grid-cols-2 gap-4'>
 							<div>
-								<Label>Unit</Label>
-								<Input value={selectedRequest?.units.address} readOnly />
+								<Label>Enhet</Label>
+								<p className='border-2 border-black p-2'>
+									{selectedRequest?.units.address}
+								</p>
 							</div>
 							<div>
 								<Label>Type</Label>
-								<Input value={selectedRequest?.type} readOnly />
+								<p className='border-2 border-black p-2'>{selectedRequest?.type}</p>
 							</div>
 							<div>
 								<Label>Priority</Label>
-								<Input value={selectedRequest?.priority} readOnly />
+								<p className='border-2 border-black p-2'>
+									{selectedRequest?.priority}
+								</p>
 							</div>
 							<div>
 								<Label>Status</Label>
-								<Input value={selectedRequest?.status} readOnly />
+								<p className='border-2 border-black p-2'>
+									{formatTitle(selectedRequest?.status)}
+								</p>
 							</div>
 						</div>
 						<div>
 							<Label>Dato registrert</Label>
-							<Input
-								value={new Date(selectedRequest?.$createdAt).toLocaleString(
-									'no-NO',
-								)}
-								readOnly
-							/>
+							<p className='border-2 border-black p-2'>
+								{new Date(selectedRequest?.$createdAt).toLocaleString('no-NO')}
+							</p>
 						</div>
-						{/* <div>
-							<Label>Comments</Label>
-							<div className='max-h-40 overflow-y-auto'>
-								{selectedRequest?.comments.map((comment:any) => (
-									<div key={comment.id} className='mb-2'>
-										<p className='text-sm'>{comment.text}</p>
-										<p className='text-xs text-gray-500'>{comment.date}</p>
-									</div>
-								))}
-							</div>
-						</div>
-						<div>
-							<Label htmlFor='new-comment'>Add Comment</Label>
-							<Input
-								id='new-comment'
-								value={newComment}
-								onChange={(e) => setNewComment(e.target.value)}
-								placeholder='Type your comment here...'
-							/>
-						</div> */}
 					</div>
-					<DialogFooter>
-						{/* <Button onClick={handleAddComment}>Add Comment</Button> */}
-					</DialogFooter>
+					<DialogFooter></DialogFooter>
 				</DialogContent>
 			</Dialog>
 		</div>

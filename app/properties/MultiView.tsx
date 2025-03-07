@@ -85,7 +85,7 @@ export default function MultiUnitPropertyManagement(props: {
 						</TabsList>
 						<TabsContent value='overview'>
 							<div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>
-								<Card>
+								<Card className='hover:bg-rentr-lightblue hover:border-rentr-main hover:shadow-lg hover:shadow-rentr-lightblue'>
 									<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 										<CardTitle className='text-sm font-medium'>
 											Total Rent
@@ -109,7 +109,7 @@ export default function MultiUnitPropertyManagement(props: {
 										</p>
 									</CardContent>
 								</Card>
-								<Card>
+								<Card className='hover:bg-rentr-lightblue hover:border-rentr-main hover:shadow-lg hover:shadow-rentr-lightblue'>
 									<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 										<CardTitle className='text-sm font-medium'>
 											Occupancy
@@ -126,7 +126,7 @@ export default function MultiUnitPropertyManagement(props: {
 										/>
 									</CardContent>
 								</Card>
-								<Card>
+								<Card className='hover:bg-rentr-lightblue hover:border-rentr-main hover:shadow-lg hover:shadow-rentr-lightblue'>
 									<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 										<CardTitle className='text-sm font-medium'>
 											Maintenance
@@ -142,7 +142,7 @@ export default function MultiUnitPropertyManagement(props: {
 										</p>
 									</CardContent>
 								</Card>
-								<Card>
+								<Card className='hover:bg-rentr-lightblue hover:border-rentr-main hover:shadow-lg hover:shadow-rentr-lightblue'>
 									<CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
 										<CardTitle className='text-sm font-medium'>
 											Total Units
@@ -224,7 +224,9 @@ export default function MultiUnitPropertyManagement(props: {
 															? unit.tenant
 															: '-'}
 													</TableCell>
-													<TableCell>${unit.monthlyrent}</TableCell>
+													<TableCell>
+														{currencyFormatter(unit.monthlyrent, false)}
+													</TableCell>
 													<TableCell>
 														<Badge
 															variant={
